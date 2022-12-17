@@ -63,8 +63,9 @@ namespace Python.Runtime
                 return Exceptions.RaiseTypeError("argument must be callable");
             }
 
-            Delegate d = PythonEngine.DelegateManager.GetDelegate(self.type, method);
-            return CLRObject.GetInstHandle(d, self.pyHandle);
+            throw new NotImplementedException("Not supported by IL2CPP");
+            //Delegate d = PythonEngine.DelegateManager.GetDelegate(self.type, method);
+            //return CLRObject.GetInstHandle(d, self.pyHandle);
         }
 
 

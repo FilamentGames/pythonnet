@@ -91,6 +91,10 @@ namespace Python.Runtime
                 }
             }
 
+            throw new NotImplementedException("Not supported by IL2CPP");
+
+            /*
+
             // otherwise just create a basic type without reflecting back into the managed side.
             IntPtr func = Marshal.ReadIntPtr(Runtime.PyTypeType, TypeOffset.tp_new);
             IntPtr type = NativeCall.Call_3(func, tp, args, kw);
@@ -122,6 +126,7 @@ namespace Python.Runtime
             Marshal.WriteIntPtr(type, TypeOffset.magic(), gc);
 
             return type;
+            */
         }
 
 
@@ -145,6 +150,8 @@ namespace Python.Runtime
         /// </summary>
         public static IntPtr tp_call(IntPtr tp, IntPtr args, IntPtr kw)
         {
+            throw new NotImplementedException("Not supported by IL2CPP");
+            /*
             IntPtr func = Marshal.ReadIntPtr(tp, TypeOffset.tp_new);
             if (func == IntPtr.Zero)
             {
@@ -175,6 +182,7 @@ namespace Python.Runtime
             }
 
             return obj;
+            */
         }
 
 
@@ -191,6 +199,8 @@ namespace Python.Runtime
 
             if (descr != IntPtr.Zero)
             {
+                throw new NotImplementedException("Not supported by IL2CPP");
+                /*
                 IntPtr dt = Runtime.PyObject_TYPE(descr);
 
                 if (dt == Runtime.PyWrapperDescriptorType
@@ -206,6 +216,7 @@ namespace Python.Runtime
                     Exceptions.SetError(Exceptions.AttributeError, "attribute is read-only");
                     return -1;
                 }
+                */
             }
 
             int res = Runtime.PyObject_GenericSetAttr(tp, name, value);
@@ -235,6 +246,8 @@ namespace Python.Runtime
         /// </summary>
         public static void tp_dealloc(IntPtr tp)
         {
+            throw new NotImplementedException("Not supported by IL2CPP");
+            /*
             // Fix this when we dont cheat on the handle for subclasses!
 
             var flags = Util.ReadCLong(tp, TypeOffset.tp_flags);
@@ -254,6 +267,7 @@ namespace Python.Runtime
 
             op = Marshal.ReadIntPtr(Runtime.PyTypeType, TypeOffset.tp_dealloc);
             NativeCall.Void_Call_1(op, tp);
+            */
         }
 
         private static IntPtr DoInstanceCheck(IntPtr tp, IntPtr args, bool checkType)

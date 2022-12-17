@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using System.Reflection.Emit;
 
 namespace Python.Runtime
 {
@@ -17,7 +16,7 @@ namespace Python.Runtime
         private Type voidtype;
         private Type typetype;
         private Type ptrtype;
-        private CodeGenerator codeGenerator;
+        //private CodeGenerator codeGenerator;
 
         public DelegateManager()
         {
@@ -27,7 +26,7 @@ namespace Python.Runtime
             typetype = typeof(Type);
             ptrtype = typeof(IntPtr);
             cache = new Hashtable();
-            codeGenerator = new CodeGenerator();
+           //codeGenerator = new CodeGenerator();
         }
 
         /// <summary>
@@ -45,6 +44,7 @@ namespace Python.Runtime
             return IntPtr.Zero;
         }
 
+        /*
         /// <summary>
         /// GetDispatcher is responsible for creating a class that provides
         /// an appropriate managed callback method for a given delegate type.
@@ -159,6 +159,7 @@ namespace Python.Runtime
             object o = Activator.CreateInstance(dispatcher, args);
             return Delegate.CreateDelegate(dtype, o, "Invoke");
         }
+        */
     }
 
 

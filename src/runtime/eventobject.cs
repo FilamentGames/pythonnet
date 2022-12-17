@@ -26,6 +26,9 @@ namespace Python.Runtime
         /// </summary>
         internal bool AddEventHandler(IntPtr target, IntPtr handler)
         {
+            throw new NotImplementedException("Not supported by IL2CPP");
+            /*
+
             object obj = null;
             if (target != IntPtr.Zero)
             {
@@ -63,6 +66,7 @@ namespace Python.Runtime
             mi.Invoke(obj, BindingFlags.Default, null, args, null);
 
             return true;
+            */
         }
 
 

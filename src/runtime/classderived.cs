@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Resources;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -24,19 +23,21 @@ namespace Python.Runtime
 
     internal class ClassDerivedObject : ClassObject
     {
+        /*
         private static Dictionary<string, AssemblyBuilder> assemblyBuilders;
         private static Dictionary<Tuple<string, string>, ModuleBuilder> moduleBuilders;
+        */
 
         static ClassDerivedObject()
         {
-            assemblyBuilders = new Dictionary<string, AssemblyBuilder>();
-            moduleBuilders = new Dictionary<Tuple<string, string>, ModuleBuilder>();
+            //assemblyBuilders = new Dictionary<string, AssemblyBuilder>();
+            //moduleBuilders = new Dictionary<Tuple<string, string>, ModuleBuilder>();
         }
 
         public static void Reset()
         {
-            assemblyBuilders = new Dictionary<string, AssemblyBuilder>();
-            moduleBuilders = new Dictionary<Tuple<string, string>, ModuleBuilder>();
+            //assemblyBuilders = new Dictionary<string, AssemblyBuilder>();
+            //moduleBuilders = new Dictionary<Tuple<string, string>, ModuleBuilder>();
         }
 
         internal ClassDerivedObject(Type tp) : base(tp)
@@ -123,6 +124,9 @@ namespace Python.Runtime
             string assemblyName,
             string moduleName = "Python.Runtime.Dynamic.dll")
         {
+            return baseType;
+
+            /*
             if (null != namespaceStr)
             {
                 name = namespaceStr + "." + name;
@@ -266,7 +270,10 @@ namespace Python.Runtime
             AssemblyBuilder assemblyBuilder = assemblyBuilders[assemblyName];
 
             return type;
+            */
         }
+
+        /*
 
         /// <summary>
         /// Add a constructor override that calls the python ctor after calling the base type constructor.
@@ -609,6 +616,7 @@ namespace Python.Runtime
 
             return moduleBuilder;
         }
+        */
     }
 
     /// <summary>

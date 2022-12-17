@@ -1,4 +1,3 @@
-using System.Reflection.Emit;
 using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
@@ -651,41 +650,10 @@ namespace Python.Runtime
             return op;
         }
 
-        internal static unsafe void XDecref(IntPtr op)
+        internal static void XDecref(IntPtr op)
         {
-#if PYTHON_WITH_PYDEBUG || NETSTANDARD
             Py_DecRef(op);
             return;
-#else
-            var p = (void*)op;
-            if ((void*)0 != p)
-            {
-                if (Is32Bit)
-                {
-                    --(*(int*)p);
-                }
-                else
-                {
-                    --(*(long*)p);
-                }
-                if ((*(int*)p) == 0)
-                {
-                    // PyObject_HEAD: struct _typeobject *ob_type
-                    void* t = Is32Bit
-                        ? (void*)(*((uint*)p + 1))
-                        : (void*)(*((ulong*)p + 1));
-                    // PyTypeObject: destructor tp_dealloc
-                    void* f = Is32Bit
-                        ? (void*)(*((uint*)t + 6))
-                        : (void*)(*((ulong*)t + 6));
-                    if ((void*)0 == f)
-                    {
-                        return;
-                    }
-                    NativeCall.Impl.Void_Call_1(new IntPtr(f), op);
-                }
-            }
-#endif
         }
 
         [Pure]
