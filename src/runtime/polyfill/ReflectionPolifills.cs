@@ -20,16 +20,14 @@ namespace Python.Runtime
 #endif
         public static T GetCustomAttribute<T>(this Type type) where T: Attribute
         {
-            return type.GetCustomAttributes(typeof(T), inherit: false)
-                .Cast<T>()
-                .SingleOrDefault();
+            // GetCustomAttributes not supported by IL2CPP
+            return default(T);
         }
 
         public static T GetCustomAttribute<T>(this Assembly assembly) where T: Attribute
         {
-            return assembly.GetCustomAttributes(typeof(T), inherit: false)
-                .Cast<T>()
-                .SingleOrDefault();
+            // GetCustomAttributes not supported by IL2CPP
+            return default(T);
         }
     }
 }
