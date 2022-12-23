@@ -1,6 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -316,11 +318,17 @@ namespace Python.Runtime
             }
         }
 
+        delegate IntPtr InstanceCheck(IntPtr tp, IntPtr args);
+
+        [MonoPInvokeCallback(typeof(InstanceCheck))]
         public static IntPtr __instancecheck__(IntPtr tp, IntPtr args)
         {
             return DoInstanceCheck(tp, args, false);
         }
 
+        delegate IntPtr SubclassCheck(IntPtr tp, IntPtr args);
+
+        [MonoPInvokeCallback(typeof(SubclassCheck))]
         public static IntPtr __subclasscheck__(IntPtr tp, IntPtr args)
         {
             return DoInstanceCheck(tp, args, true);
