@@ -141,6 +141,16 @@ namespace Python.Runtime
             Runtime.SetNoSiteFlag();
         }
 
+        /// <summary>
+        /// Set the VerboseFlag to 2.
+        /// Must be called before Initialize.
+        /// https://docs.python.org/3/c-api/init.html#c.Py_NoSiteFlag
+        /// </summary>
+        public static void SetVerbose()
+        {
+            Runtime.SetVerbose();
+        }
+
         public static int RunSimpleString(string code)
         {
             return Runtime.PyRun_SimpleString(code);
@@ -322,7 +332,7 @@ namespace Python.Runtime
             if (initialized)
             {
                 PyScopeManager.Global.Clear();
-                
+
                 // If the shutdown handlers trigger a domain unload,
                 // don't call shutdown again.
                 AppDomain.CurrentDomain.DomainUnload -= OnDomainUnload;
@@ -588,7 +598,7 @@ namespace Python.Runtime
                     borrowedGlobals = false;
                 }
             }
-            
+
             if (locals == null)
             {
                 locals = globals;
@@ -651,7 +661,7 @@ namespace Python.Runtime
             var scope = PyScopeManager.Global.Create(name);
             return scope;
         }
-        
+
         public class GILState : IDisposable
         {
             private readonly IntPtr state;
@@ -752,7 +762,7 @@ namespace Python.Runtime
 
         public static void With(PyObject obj, Action<dynamic> Body)
         {
-            // Behavior described here: 
+            // Behavior described here:
             // https://docs.python.org/2/reference/datamodel.html#with-statement-context-managers
 
             IntPtr type = Runtime.PyNone;
