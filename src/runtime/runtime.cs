@@ -336,11 +336,13 @@ namespace Python.Runtime
 
             // Need to add the runtime directory to sys.path so that we
             // can find built-in assemblies like System.Data, et. al.
+            /*
             string rtdir = RuntimeEnvironment.GetRuntimeDirectory();
             IntPtr path = PySys_GetObject("path");
             IntPtr item = PyString_FromString(rtdir);
             PyList_Append(new BorrowedReference(path), item);
             XDecref(item);
+            */
             AssemblyManager.UpdatePath();
         }
 
