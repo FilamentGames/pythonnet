@@ -483,11 +483,8 @@ namespace Python.Runtime
 
         internal static IntPtr Py_NoSiteFlag;
 
-        internal static IntPtr Py_VerboseFlag;
-
 #if PYTHON3
         internal static IntPtr PyBytesType;
-
 #endif
         internal static IntPtr _PyObject_NextNotImplemented;
 
@@ -2013,28 +2010,6 @@ namespace Python.Runtime
             {
                 Py_NoSiteFlag = loader.GetFunction(dllLocal, "Py_NoSiteFlag");
                 Marshal.WriteInt32(Py_NoSiteFlag, 1);
-            }
-            finally
-            {
-                if (dllLocal != IntPtr.Zero)
-                {
-                    loader.Free(dllLocal);
-                }
-            }
-        }
-
-        internal static void SetVerbose()
-        {
-            var loader = LibraryLoader.Get(OperatingSystem);
-
-            IntPtr dllLocal = _PythonDll != "__Internal"
-                ? loader.Load(_PythonDll)
-                : IntPtr.Zero;
-
-            try
-            {
-                Py_VerboseFlag = loader.GetFunction(dllLocal, "Py_VerboseFlag");
-                Marshal.WriteInt32(Py_VerboseFlag, 2);
             }
             finally
             {
