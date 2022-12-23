@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using AOT;
 
 namespace Python.Runtime
 {
@@ -199,6 +200,10 @@ namespace Python.Runtime
         /// <summary>
         /// The actual import hook that ties Python to the managed world.
         /// </summary>
+
+        delegate IntPtr Import(IntPtr self, IntPtr args, IntPtr kw);
+
+        [MonoPInvokeCallback(typeof(Import))]
         public static IntPtr __import__(IntPtr self, IntPtr args, IntPtr kw)
         {
             // Replacement for the builtin __import__. The original import
