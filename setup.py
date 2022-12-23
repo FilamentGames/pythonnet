@@ -277,16 +277,16 @@ class BuildExtPythonnet(build_ext.build_ext):
             defines.append("MONO_OSX" if on_darwin else "MONO_LINUX")
 
             # Check if --enable-shared was set when Python was built
-            enable_shared = sysconfig.get_config_var("Py_ENABLE_SHARED")
-            if enable_shared:
+            #enable_shared = sysconfig.get_config_var("Py_ENABLE_SHARED")
+            #if enable_shared:
                 # Double-check if libpython is linked dynamically with python
-                ldd_cmd = ["otool", "-L"] if on_darwin else ["ldd"]
-                lddout = _check_output(ldd_cmd + [sys.executable])
-                if "libpython" not in lddout:
-                    enable_shared = False
+            #    ldd_cmd = ["otool", "-L"] if on_darwin else ["ldd"]
+            #    lddout = _check_output(ldd_cmd + [sys.executable])
+            #    if "libpython" not in lddout:
+            #       enable_shared = False
 
-            if not enable_shared:
-                defines.append("PYTHON_WITHOUT_ENABLE_SHARED")
+            #if not enable_shared:
+            #    defines.append("PYTHON_WITHOUT_ENABLE_SHARED")
 
         if hasattr(sys, "abiflags"):
             if "d" in sys.abiflags:
