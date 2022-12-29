@@ -247,6 +247,7 @@ namespace Python.Runtime
             // Check these BEFORE the built-in import runs; may as well
             // do the Incref()ed return here, since we've already found
             // the module.
+            /*
             if (mod_name == "clr")
             {
                 IntPtr clr_module = GetCLRModule(fromList);
@@ -274,7 +275,9 @@ namespace Python.Runtime
                 }
                 return clr_module;
             }
+            */
             string realname = mod_name;
+            /*
             string clr_prefix = null;
             if (mod_name.StartsWith("CLR."))
             {
@@ -285,6 +288,7 @@ namespace Python.Runtime
             }
             else
             {
+            */
                 // 2010-08-15: Always seemed smart to let python try first...
                 // This shaves off a few tenths of a second on test_module.py
                 // and works around a quirk where 'sys' is found by the
@@ -320,7 +324,7 @@ namespace Python.Runtime
                 }
                 // Otherwise,  just clear the it.
                 Exceptions.Clear();
-            }
+            //}
 
             string[] names = realname.Split('.');
 
@@ -362,10 +366,12 @@ namespace Python.Runtime
                     Runtime.XIncref(module);
                     return module;
                 }
+                /*
                 if (clr_prefix != null)
                 {
                     return GetCLRModule(fromList);
                 }
+                */
                 module = Runtime.PyDict_GetItemString(modules, names[0]);
                 Runtime.XIncref(module);
                 return module;
@@ -408,10 +414,12 @@ namespace Python.Runtime
                 Runtime.PyDict_SetItemString(modules, tail.moduleName, tail.pyHandle);
 
                 // If imported from CLR add CLR.<modulename> to sys.modules as well
+                /*
                 if (clr_prefix != null)
                 {
                     Runtime.PyDict_SetItemString(modules, clr_prefix + tail.moduleName, tail.pyHandle);
                 }
+                */
             }
 
             {

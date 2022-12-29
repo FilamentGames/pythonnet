@@ -198,6 +198,7 @@ namespace Python.Runtime
                 // register the atexit callback (this doesn't use Py_AtExit as the C atexit
                 // callbacks are called after python is fully finalized but the python ones
                 // are called while the python engine is still running).
+                /*
                 string code =
                     "import atexit, clr\n" +
                     "atexit.register(clr._AtExit)\n";
@@ -242,6 +243,7 @@ namespace Python.Runtime
                 {
                     locals.Dispose();
                 }
+                */
             }
         }
 
@@ -322,7 +324,7 @@ namespace Python.Runtime
             if (initialized)
             {
                 PyScopeManager.Global.Clear();
-                
+
                 // If the shutdown handlers trigger a domain unload,
                 // don't call shutdown again.
                 AppDomain.CurrentDomain.DomainUnload -= OnDomainUnload;
@@ -588,7 +590,7 @@ namespace Python.Runtime
                     borrowedGlobals = false;
                 }
             }
-            
+
             if (locals == null)
             {
                 locals = globals;
@@ -651,7 +653,7 @@ namespace Python.Runtime
             var scope = PyScopeManager.Global.Create(name);
             return scope;
         }
-        
+
         public class GILState : IDisposable
         {
             private readonly IntPtr state;
@@ -752,7 +754,7 @@ namespace Python.Runtime
 
         public static void With(PyObject obj, Action<dynamic> Body)
         {
-            // Behavior described here: 
+            // Behavior described here:
             // https://docs.python.org/2/reference/datamodel.html#with-statement-context-managers
 
             IntPtr type = Runtime.PyNone;
