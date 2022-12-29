@@ -72,7 +72,7 @@ namespace Python.Runtime
                 variables, "__builtins__",
                 Runtime.PyEval_GetBuiltins()
             );
-            this.TryGet<string>("__name__", this.Name);
+            this.TryGet<string>("__name__", out this.Name);
         }
 
         /// <summary>
