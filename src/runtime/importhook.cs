@@ -81,6 +81,7 @@ namespace Python.Runtime
         {
             InitImport();
 
+/*
             // Initialize the clr module and tell Python about it.
             root = new CLRModule();
 
@@ -102,6 +103,7 @@ namespace Python.Runtime
             IntPtr dict = Runtime.PyImport_GetModuleDict();
             Runtime.PyDict_SetItemString(dict, "CLR", py_clr_module);
             Runtime.PyDict_SetItemString(dict, "clr", py_clr_module);
+*/
         }
 
 
