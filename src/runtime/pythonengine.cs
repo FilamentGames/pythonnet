@@ -783,5 +783,17 @@ namespace Python.Runtime
 
             if (ex != null && !exitResult.IsTrue()) throw ex;
         }
+
+        public static int Interrupt(ulong pythonThreadID)
+        {
+            return Runtime.PyThreadState_SetAsyncExc(pythonThreadID, Exceptions.KeyboardInterrupt);
+        }
+
+        public static ulong GetPythonThreadID()
+        {
+            PyObject threading = Py.Import("threading");
+            PyObject id = threading.InvokeMethod("get_ident");
+            return id.As<ulong>();
+        }
     }
 }

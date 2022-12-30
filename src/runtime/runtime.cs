@@ -2000,6 +2000,9 @@ namespace Python.Runtime
         [DllImport(_PythonDll, CallingConvention = CallingConvention.Cdecl)]
         internal static extern int Py_MakePendingCalls();
 
+        [DllImport(_PythonDll, CallingConvention = CallingConvention.Cdecl)]
+        internal static extern int PyThreadState_SetAsyncExc(ulong id, IntPtr exc);
+
         internal static void SetNoSiteFlag()
         {
             var loader = LibraryLoader.Get(OperatingSystem);
