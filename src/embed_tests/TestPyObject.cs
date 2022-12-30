@@ -21,44 +21,6 @@ namespace Python.EmbeddingTest
         }
 
         [Test]
-        public void TestGetDynamicMemberNames()
-        {
-            List<string> expectedMemberNames = new List<string>
-            {
-                "add",
-                "getNumber",
-                "member1",
-                "member2"
-            };
-
-            PyDict locals = new PyDict();
-
-            PythonEngine.Exec(@"
-class MemberNamesTest(object):
-    def __init__(self):
-        self.member1 = 123
-        self.member2 = 'Test string'
-
-    def getNumber(self):
-        return 123
-
-    def add(self, x, y):
-        return x + y
-
-a = MemberNamesTest()
-", null, locals.Handle);
-
-            PyObject a = locals.GetItem("a");
-
-            IEnumerable<string> memberNames = a.GetDynamicMemberNames();
-
-            foreach (string expectedName in expectedMemberNames)
-            {
-                Assert.IsTrue(memberNames.Contains(expectedName), "Could not find member '{0}'.", expectedName);
-            }
-        }
-
-        [Test]
         public void InvokeNull() {
             var list = PythonEngine.Eval("list");
             Assert.Throws<ArgumentNullException>(() => list.Invoke(new PyObject[] {null}));

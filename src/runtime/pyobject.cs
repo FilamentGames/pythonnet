@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -20,14 +19,14 @@ namespace Python.Runtime
     /// PY3: https://docs.python.org/3/c-api/object.html
     /// for details.
     /// </summary>
-    public class PyObject : DynamicObject, IEnumerable, IPyDisposable
+    public class PyObject : IEnumerable, IPyDisposable
     {
 #if TRACE_ALLOC
         /// <summary>
         /// Trace stack for PyObject's construction
         /// </summary>
         public StackTrace Traceback { get; private set; }
-#endif  
+#endif
 
         protected internal IntPtr obj = IntPtr.Zero;
 
@@ -1101,85 +1100,6 @@ namespace Python.Runtime
             }
         }
 
-
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            result = CheckNone(this.GetAttr(binder.Name));
-            return true;
-        }
-
-        public override bool TrySetMember(SetMemberBinder binder, object value)
-        {
-            IntPtr ptr = Converter.ToPython(value, value?.GetType());
-            int r = Runtime.PyObject_SetAttrString(obj, binder.Name, ptr);
-            if (r < 0)
-            {
-                throw new PythonException();
-            }
-            Runtime.XDecref(ptr);
-            return true;
-        }
-
-        private void GetArgs(object[] inargs, CallInfo callInfo, out PyTuple args, out PyDict kwargs)
-        {
-            if (callInfo == null || callInfo.ArgumentNames.Count == 0)
-            {
-                GetArgs(inargs, out args, out kwargs);
-                return;
-            }
-
-            // Support for .net named arguments
-            var namedArgumentCount = callInfo.ArgumentNames.Count;
-            var regularArgumentCount = callInfo.ArgumentCount - namedArgumentCount;
-
-            var argTuple = Runtime.PyTuple_New(regularArgumentCount);
-            for (int i = 0; i < regularArgumentCount; ++i)
-            {
-                AddArgument(argTuple, i, inargs[i]);
-            }
-            args = new PyTuple(argTuple);
-
-            var namedArgs = new object[namedArgumentCount * 2];
-            for (int i = 0; i < namedArgumentCount; ++i)
-            {
-                namedArgs[i * 2] = callInfo.ArgumentNames[i];
-                namedArgs[i * 2 + 1] = inargs[regularArgumentCount + i];
-            }
-            kwargs = Py.kw(namedArgs);
-        }
-
-        private void GetArgs(object[] inargs, out PyTuple args, out PyDict kwargs)
-        {
-            int arg_count;
-            for (arg_count = 0; arg_count < inargs.Length && !(inargs[arg_count] is Py.KeywordArguments); ++arg_count)
-            {
-                ;
-            }
-            IntPtr argtuple = Runtime.PyTuple_New(arg_count);
-            for (var i = 0; i < arg_count; i++)
-            {
-                AddArgument(argtuple, i, inargs[i]);
-            }
-            args = new PyTuple(argtuple);
-
-            kwargs = null;
-            for (int i = arg_count; i < inargs.Length; i++)
-            {
-                if (!(inargs[i] is Py.KeywordArguments))
-                {
-                    throw new ArgumentException("Keyword arguments must come after normal arguments.");
-                }
-                if (kwargs == null)
-                {
-                    kwargs = (Py.KeywordArguments)inargs[i];
-                }
-                else
-                {
-                    kwargs.Update((Py.KeywordArguments)inargs[i]);
-                }
-            }
-        }
-
         private static void AddArgument(IntPtr argtuple, int i, object target)
         {
             IntPtr ptr = GetPythonObject(target);
@@ -1206,167 +1126,6 @@ namespace Python.Runtime
             return ptr;
         }
 
-        public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
-        {
-            if (this.HasAttr(binder.Name) && this.GetAttr(binder.Name).IsCallable())
-            {
-                PyTuple pyargs = null;
-                PyDict kwargs = null;
-                try
-                {
-                    GetArgs(args, binder.CallInfo, out pyargs, out kwargs);
-                    result = CheckNone(InvokeMethod(binder.Name, pyargs, kwargs));
-                }
-                finally
-                {
-                    if (null != pyargs)
-                    {
-                        pyargs.Dispose();
-                    }
-                    if (null != kwargs)
-                    {
-                        kwargs.Dispose();
-                    }
-                }
-                return true;
-            }
-            else
-            {
-                return base.TryInvokeMember(binder, args, out result);
-            }
-        }
-
-        public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
-        {
-            if (this.IsCallable())
-            {
-                PyTuple pyargs = null;
-                PyDict kwargs = null;
-                try
-                {
-                    GetArgs(args, binder.CallInfo, out pyargs, out kwargs);
-                    result = CheckNone(Invoke(pyargs, kwargs));
-                }
-                finally
-                {
-                    if (null != pyargs)
-                    {
-                        pyargs.Dispose();
-                    }
-                    if (null != kwargs)
-                    {
-                        kwargs.Dispose();
-                    }
-                }
-                return true;
-            }
-            else
-            {
-                return base.TryInvoke(binder, args, out result);
-            }
-        }
-
-        public override bool TryConvert(ConvertBinder binder, out object result)
-        {
-            return Converter.ToManaged(this.obj, binder.Type, out result, false);
-        }
-
-        public override bool TryBinaryOperation(BinaryOperationBinder binder, object arg, out object result)
-        {
-            IntPtr res;
-            if (!(arg is PyObject))
-            {
-                arg = arg.ToPython();
-            }
-
-            switch (binder.Operation)
-            {
-                case ExpressionType.Add:
-                    res = Runtime.PyNumber_Add(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.AddAssign:
-                    res = Runtime.PyNumber_InPlaceAdd(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.Subtract:
-                    res = Runtime.PyNumber_Subtract(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.SubtractAssign:
-                    res = Runtime.PyNumber_InPlaceSubtract(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.Multiply:
-                    res = Runtime.PyNumber_Multiply(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.MultiplyAssign:
-                    res = Runtime.PyNumber_InPlaceMultiply(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.Divide:
-                    res = Runtime.PyNumber_TrueDivide(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.DivideAssign:
-                    res = Runtime.PyNumber_InPlaceTrueDivide(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.And:
-                    res = Runtime.PyNumber_And(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.AndAssign:
-                    res = Runtime.PyNumber_InPlaceAnd(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.ExclusiveOr:
-                    res = Runtime.PyNumber_Xor(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.ExclusiveOrAssign:
-                    res = Runtime.PyNumber_InPlaceXor(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.GreaterThan:
-                    result = Runtime.PyObject_Compare(this.obj, ((PyObject)arg).obj) > 0;
-                    return true;
-                case ExpressionType.GreaterThanOrEqual:
-                    result = Runtime.PyObject_Compare(this.obj, ((PyObject)arg).obj) >= 0;
-                    return true;
-                case ExpressionType.LeftShift:
-                    res = Runtime.PyNumber_Lshift(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.LeftShiftAssign:
-                    res = Runtime.PyNumber_InPlaceLshift(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.LessThan:
-                    result = Runtime.PyObject_Compare(this.obj, ((PyObject)arg).obj) < 0;
-                    return true;
-                case ExpressionType.LessThanOrEqual:
-                    result = Runtime.PyObject_Compare(this.obj, ((PyObject)arg).obj) <= 0;
-                    return true;
-                case ExpressionType.Modulo:
-                    res = Runtime.PyNumber_Remainder(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.ModuloAssign:
-                    res = Runtime.PyNumber_InPlaceRemainder(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.NotEqual:
-                    result = Runtime.PyObject_Compare(this.obj, ((PyObject)arg).obj) != 0;
-                    return true;
-                case ExpressionType.Or:
-                    res = Runtime.PyNumber_Or(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.OrAssign:
-                    res = Runtime.PyNumber_InPlaceOr(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.Power:
-                    res = Runtime.PyNumber_Power(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.RightShift:
-                    res = Runtime.PyNumber_Rshift(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.RightShiftAssign:
-                    res = Runtime.PyNumber_InPlaceRshift(this.obj, ((PyObject)arg).obj);
-                    break;
-                default:
-                    result = null;
-                    return false;
-            }
-            result = CheckNone(new PyObject(res));
-            return true;
-        }
-
         // Workaround for https://bugzilla.xamarin.com/show_bug.cgi?id=41509
         // See https://github.com/pythonnet/pythonnet/pull/219
         private static object CheckNone(PyObject pyObj)
@@ -1380,58 +1139,6 @@ namespace Python.Runtime
             }
 
             return pyObj;
-        }
-
-        public override bool TryUnaryOperation(UnaryOperationBinder binder, out object result)
-        {
-            int r;
-            IntPtr res;
-            switch (binder.Operation)
-            {
-                case ExpressionType.Negate:
-                    res = Runtime.PyNumber_Negative(this.obj);
-                    break;
-                case ExpressionType.UnaryPlus:
-                    res = Runtime.PyNumber_Positive(this.obj);
-                    break;
-                case ExpressionType.OnesComplement:
-                    res = Runtime.PyNumber_Invert(this.obj);
-                    break;
-                case ExpressionType.Not:
-                    r = Runtime.PyObject_Not(this.obj);
-                    result = r == 1;
-                    return r != -1;
-                case ExpressionType.IsFalse:
-                    r = Runtime.PyObject_IsTrue(this.obj);
-                    result = r == 0;
-                    return r != -1;
-                case ExpressionType.IsTrue:
-                    r = Runtime.PyObject_IsTrue(this.obj);
-                    result = r == 1;
-                    return r != -1;
-                case ExpressionType.Decrement:
-                case ExpressionType.Increment:
-                default:
-                    result = null;
-                    return false;
-            }
-            result = CheckNone(new PyObject(res));
-            return true;
-        }
-
-        /// <summary>
-        /// Returns the enumeration of all dynamic member names.
-        /// </summary>
-        /// <remarks>
-        /// This method exists for debugging purposes only.
-        /// </remarks>
-        /// <returns>A sequence that contains dynamic member names.</returns>
-        public override IEnumerable<string> GetDynamicMemberNames()
-        {
-            foreach (PyObject pyObj in Dir())
-            {
-                yield return pyObj.ToString();
-            }
         }
     }
 }

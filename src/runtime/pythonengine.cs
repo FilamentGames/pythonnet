@@ -752,38 +752,6 @@ namespace Python.Runtime
             }
         }
 
-        public static void With(PyObject obj, Action<dynamic> Body)
-        {
-            // Behavior described here:
-            // https://docs.python.org/2/reference/datamodel.html#with-statement-context-managers
-
-            IntPtr type = Runtime.PyNone;
-            IntPtr val = Runtime.PyNone;
-            IntPtr traceBack = Runtime.PyNone;
-            PythonException ex = null;
-
-            try
-            {
-                PyObject enterResult = obj.InvokeMethod("__enter__");
-
-                Body(enterResult);
-            }
-            catch (PythonException e)
-            {
-                ex = e;
-                type = ex.PyType.Coalesce(type);
-                val = ex.PyValue.Coalesce(val);
-                traceBack = ex.PyTB.Coalesce(traceBack);
-            }
-
-            Runtime.XIncref(type);
-            Runtime.XIncref(val);
-            Runtime.XIncref(traceBack);
-            var exitResult = obj.InvokeMethod("__exit__", new PyObject(type), new PyObject(val), new PyObject(traceBack));
-
-            if (ex != null && !exitResult.IsTrue()) throw ex;
-        }
-
         public static int Interrupt(ulong pythonThreadID)
         {
             return Runtime.PyThreadState_SetAsyncExc(pythonThreadID, Exceptions.KeyboardInterrupt);
