@@ -15,7 +15,7 @@ namespace Python.EmbeddingTest
             using (Py.GIL())
             {
                 ps = Py.CreateScope("test");
-            }                
+            }
         }
 
         [TearDown]
@@ -39,7 +39,7 @@ namespace Python.EmbeddingTest
                 ps.Set("a", 1);
                 var result = ps.Eval<int>("a + 2");
                 Assert.AreEqual(3, result);
-            }                
+            }
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace Python.EmbeddingTest
         {
             using (Py.GIL())
             {
-                dynamic sys = ps.Import("sys");
+                dynamic sys = ps.ImportModule("sys");
                 Assert.IsTrue(ps.Contains("sys"));
 
                 ps.Exec("sys.attr1 = 2");
@@ -176,13 +176,13 @@ namespace Python.EmbeddingTest
                 Assert.AreEqual(2, value2);
 
                 //import as
-                ps.Import("sys", "sys1");
+                ps.ImportModule("sys", "sys1");
                 Assert.IsTrue(ps.Contains("sys1"));
             }
         }
 
         /// <summary>
-        /// Create a scope and import variables from a scope, 
+        /// Create a scope and import variables from a scope,
         /// exec Python statements in the scope then discard it.
         /// </summary>
         [Test]
@@ -195,7 +195,7 @@ namespace Python.EmbeddingTest
 
                 using (var scope = Py.CreateScope())
                 {
-                    scope.Import(ps, "ps");
+                    scope.ImportScope(ps, "ps");
                     scope.Exec("aa = ps.bb + ps.cc + 3");
                     var result = scope.Get<int>("aa");
                     Assert.AreEqual(113, result);
@@ -206,7 +206,7 @@ namespace Python.EmbeddingTest
         }
 
         /// <summary>
-        /// Create a scope and import variables from a scope, 
+        /// Create a scope and import variables from a scope,
         /// exec Python statements in the scope then discard it.
         /// </summary>
         [Test]
@@ -229,7 +229,7 @@ namespace Python.EmbeddingTest
         }
 
         /// <summary>
-        /// Create a scope and import variables from a scope, 
+        /// Create a scope and import variables from a scope,
         /// call the function imported.
         /// </summary>
         [Test]
@@ -284,7 +284,7 @@ namespace Python.EmbeddingTest
                     //scope.ImportModule("test");
 
                     Assert.IsTrue(scope.Contains("bb"));
-                }                    
+                }
             }
         }
 
@@ -295,7 +295,7 @@ namespace Python.EmbeddingTest
         public void TestVariables()
         {
             using (Py.GIL())
-            { 
+            {
                 (ps.Variables() as dynamic)["ee"] = new PyInt(200);
                 var a0 = ps.Get<int>("ee");
                 Assert.AreEqual(200, a0);
@@ -335,8 +335,8 @@ namespace Python.EmbeddingTest
                     _ps.res = 0;
                     _ps.bb = 100;
                     _ps.th_cnt = 0;
-                    //add function to the scope 
-                    //can be call many times, more efficient than ast 
+                    //add function to the scope
+                    //can be call many times, more efficient than ast
                     ps.Exec(
                         "import threading\n" +
                         "lock = threading.Lock()\n" +

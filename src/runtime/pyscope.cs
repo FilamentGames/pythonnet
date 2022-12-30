@@ -103,7 +103,7 @@ namespace Python.Runtime
         /// Import a scope or a module of given name,
         /// scope will be looked up first.
         /// </remarks>
-        public dynamic Import(string name, string asname = null)
+        public PyScope ImportScope(string name, string asname = null)
         {
             Check();
             if (String.IsNullOrEmpty(asname))
@@ -114,15 +114,24 @@ namespace Python.Runtime
             Manager.TryGet(name, out scope);
             if (scope != null)
             {
-                Import(scope, asname);
+                ImportScope(scope, asname);
                 return scope;
             }
-            else
+
+            return null;
+        }
+
+        public PyObject ImportModule(string name, string asname = null)
+        {
+            Check();
+            if (String.IsNullOrEmpty(asname))
             {
-                PyObject module = PythonEngine.ImportModule(name);
-                Import(module, asname);
-                return module;
+                asname = name;
             }
+
+            PyObject module = PythonEngine.ImportModule(name);
+            ImportModule(module, asname);
+            return module;
         }
 
         /// <summary>
@@ -131,7 +140,7 @@ namespace Python.Runtime
         /// <remarks>
         /// Import a scope as a variable of given name.
         /// </remarks>
-        public void Import(PyScope scope, string asname)
+        public void ImportScope(PyScope scope, string asname)
         {
             this.Set(asname, scope.obj);
         }
@@ -143,7 +152,7 @@ namespace Python.Runtime
         /// The 'import .. as ..' statement in Python.
         /// Import a module as a variable into the scope.
         /// </remarks>
-        public void Import(PyObject module, string asname = null)
+        public void ImportModule(PyObject module, string asname = null)
         {
             if (String.IsNullOrEmpty(asname))
             {
