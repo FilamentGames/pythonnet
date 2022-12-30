@@ -621,6 +621,18 @@ namespace Python.Runtime
                 }
             }
         }
+
+        public static int Interrupt(ulong pythonThreadID)
+        {
+            return Runtime.PyThreadState_SetAsyncExc(pythonThreadID, Exceptions.KeyboardInterrupt);
+        }
+
+        public static ulong GetPythonThreadID()
+        {
+            PyObject threading = Py.Import("threading");
+            PyObject id = threading.InvokeMethod("get_ident");
+            return id.As<ulong>();
+        }
     }
 
     public enum RunFlagType : int
@@ -750,18 +762,6 @@ namespace Python.Runtime
                 Runtime.PySys_SetArgvEx(arr.Length, arr, 0);
                 Runtime.CheckExceptionOccurred();
             }
-        }
-
-        public static int Interrupt(ulong pythonThreadID)
-        {
-            return Runtime.PyThreadState_SetAsyncExc(pythonThreadID, Exceptions.KeyboardInterrupt);
-        }
-
-        public static ulong GetPythonThreadID()
-        {
-            PyObject threading = Py.Import("threading");
-            PyObject id = threading.InvokeMethod("get_ident");
-            return id.As<ulong>();
         }
     }
 }
