@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 
 using Python.Runtime.Native;
 using Python.Runtime.Platform;
@@ -13,7 +14,7 @@ public unsafe partial class Runtime
 
         static Delegates()
         {
-            Py_IncRef = (delegate* unmanaged[Cdecl]<BorrowedReference, void>)GetFunctionByName(nameof(Py_IncRef), GetUnmanagedDll(_PythonDll));
+            Py_IncRef = GetDelegateByName<BorrowedReference_Void_Fn>(nameof(Py_IncRef), GetUnmanagedDll(_PythonDll), typeof(BorrowedReference_Void_Fn));
             Py_DecRef = (delegate* unmanaged[Cdecl]<StolenReference, void>)GetFunctionByName(nameof(Py_DecRef), GetUnmanagedDll(_PythonDll));
             Py_Initialize = (delegate* unmanaged[Cdecl]<void>)GetFunctionByName(nameof(Py_Initialize), GetUnmanagedDll(_PythonDll));
             Py_InitializeEx = (delegate* unmanaged[Cdecl]<int, void>)GetFunctionByName(nameof(Py_InitializeEx), GetUnmanagedDll(_PythonDll));
@@ -280,7 +281,7 @@ public unsafe partial class Runtime
             catch (MissingMethodException) { }
 
             PyType_Type = GetFunctionByName(nameof(PyType_Type), GetUnmanagedDll(_PythonDll));
-            Py_NoSiteFlag = (int*)GetFunctionByName(nameof(Py_NoSiteFlag), GetUnmanagedDll(_PythonDll));
+            Py_NoSiteFlag = GetFunctionByName(nameof(Py_NoSiteFlag), GetUnmanagedDll(_PythonDll));
         }
 
         static global::System.IntPtr GetUnmanagedDll(string? libraryName)
@@ -289,7 +290,7 @@ public unsafe partial class Runtime
             return libraryLoader.Load(libraryName);
         }
 
-        static global::System.IntPtr GetFunctionByName(string functionName, global::System.IntPtr libraryHandle)
+        static IntPtr GetFunctionByName(string functionName, global::System.IntPtr libraryHandle)
         {
             try
             {
@@ -304,10 +305,20 @@ public unsafe partial class Runtime
             }
         }
 
-        internal static delegate* unmanaged[Cdecl]<BorrowedReference, void> Py_IncRef { get; }
-        internal static delegate* unmanaged[Cdecl]<StolenReference, void> Py_DecRef { get; }
-        internal static delegate* unmanaged[Cdecl]<void> Py_Initialize { get; }
-        internal static delegate* unmanaged[Cdecl]<int, void> Py_InitializeEx { get; }
+        static T GetDelegateByName<T>(string functionName, global::System.IntPtr libraryHandle, Type delegateType) where T : Delegate
+        {
+            return (T) Marshal.GetDelegateForFunctionPointer(GetFunctionByName(functionName, libraryHandle), delegateType);
+        }
+
+        internal delegate void BorrowedReference_Void_Fn(BorrowedReference obj);
+        internal delegate void StolenReference_Void_Fn(StolenReference obj);
+        internal delegate void Void_Fn();
+        internal delegate void Int_Void_Fn(int obj);
+
+        internal static BorrowedReference_Void_Fn Py_IncRef { get; }
+        internal static StolenReference_Void_Fn Py_DecRef { get; }
+        internal static Void_Fn Py_Initialize { get; }
+        internal static Int_Void_Fn Py_InitializeEx { get; }
         internal static delegate* unmanaged[Cdecl]<int> Py_IsInitialized { get; }
         internal static delegate* unmanaged[Cdecl]<void> Py_Finalize { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*> Py_NewInterpreter { get; }
@@ -539,6 +550,6 @@ public unsafe partial class Runtime
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, void> _Py_NewReference { get; }
         internal static delegate* unmanaged[Cdecl]<int> _Py_IsFinalizing { get; }
         internal static IntPtr PyType_Type { get; }
-        internal static int* Py_NoSiteFlag { get; }
+        internal static IntPtr Py_NoSiteFlag { get; }
     }
 }
