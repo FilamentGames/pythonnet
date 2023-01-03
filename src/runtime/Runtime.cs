@@ -717,7 +717,7 @@ namespace Python.Runtime
         /// </summary>
         /// <param name="ob">PyObject Ptr</param>
 
-        internal static void Py_DecRef(StolenReference ob) => Delegates.Py_DecRef(ob);
+        internal static void Py_DecRef(StolenReference ob) => Delegates.Py_DecRef(ref ob);
 
 
         internal static void Py_Initialize() => Delegates.Py_Initialize();
@@ -1832,8 +1832,8 @@ namespace Python.Runtime
         {
             TryUsingDll(() =>
             {
-                *Delegates.Py_NoSiteFlag = 1;
-                return *Delegates.Py_NoSiteFlag;
+                Marshal.WriteInt32(Delegates.Py_NoSiteFlag, 1);
+                return Marshal.ReadInt32(Delegates.Py_NoSiteFlag);
             });
         }
     }
