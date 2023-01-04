@@ -174,15 +174,6 @@ namespace Python.Runtime
             }
             Exceptions.Initialize();
 
-            // Need to add the runtime directory to sys.path so that we
-            // can find built-in assemblies like System.Data, et. al.
-            string rtdir = RuntimeEnvironment.GetRuntimeDirectory();
-            BorrowedReference path = PySys_GetObject("path");
-            using var item = PyString_FromString(rtdir);
-            if (PySequence_Contains(path, item.Borrow()) == 0)
-            {
-                PyList_Append(path, item.Borrow());
-            }
             AssemblyManager.UpdatePath();
 
             clrInterop = GetModuleLazy("clr.interop");
