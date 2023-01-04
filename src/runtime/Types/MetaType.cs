@@ -28,12 +28,6 @@ namespace Python.Runtime
             "__subclasscheck__",
         };
 
-        private delegate NewReference BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference tp, BorrowedReference args, BorrowedReference kw);
-        private delegate int BorrowedReferenceBorrowedReferenceBorrowedReferenceIntFunc(BorrowedReference tp, BorrowedReference name, BorrowedReference value);
-        private delegate NewReference BorrowedReferenceNintNewReferenceFunc(BorrowedReference mt, nint n);
-        private delegate void NewReferenceAction(NewReference tp);
-        private delegate NewReference BorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference tp, BorrowedReference idx);
-
         /// <summary>
         /// Metatype initialization. This bootstraps the CLR metatype to life.
         /// </summary>

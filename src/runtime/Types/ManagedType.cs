@@ -15,11 +15,20 @@ namespace Python.Runtime
     internal abstract class ManagedType
     {
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int VisitFunc(BorrowedReference a, IntPtr b);
+        internal delegate int NativeBorrowedReferenceIntPtrIntFunc(BorrowedReference a, IntPtr b);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void FreeFunc(StolenReference a);
+        internal delegate void NativeStolenReferenceAction(StolenReference a);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int ClearFunc(BorrowedReference a);
+        internal delegate int NativeBorrowedReferenceIntFunc(BorrowedReference a);
+
+        internal delegate NewReference BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference tp, BorrowedReference args, BorrowedReference kw);
+        internal delegate int BorrowedReferenceBorrowedReferenceBorrowedReferenceIntFunc(BorrowedReference tp, BorrowedReference name, BorrowedReference value);
+        internal delegate NewReference BorrowedReferenceNintNewReferenceFunc(BorrowedReference mt, nint n);
+        internal delegate void NewReferenceAction(NewReference tp);
+        internal delegate NewReference BorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference tp, BorrowedReference idx);
+        internal delegate NewReference BorrowedReferenceNewReferenceFunc(NewReference a);
+        internal delegate int BorrowedReferenceIntPtrIntPtrIntFunc(BorrowedReference a, IntPtr b, IntPtr c);
+        internal delegate int BorrowedReferenceIntFunc(BorrowedReference a);
 
         /// <summary>
         /// Given a Python object, return the associated managed object or null.
@@ -77,7 +86,7 @@ namespace Python.Runtime
             {
                 return 0;
             }
-            var visitFunc = Marshal.GetDelegateForFunctionPointer<VisitFunc>(visit);
+            var visitFunc = Marshal.GetDelegateForFunctionPointer<NativeBorrowedReferenceIntPtrIntFunc>(visit);
             return visitFunc(ob, arg);
         }
 
@@ -90,7 +99,7 @@ namespace Python.Runtime
 
             var freePtr = Util.ReadIntPtr(type, TypeOffset.tp_free);
             Debug.Assert(freePtr != IntPtr.Zero);
-            var free = Marshal.GetDelegateForFunctionPointer<FreeFunc>(freePtr);
+            var free = Marshal.GetDelegateForFunctionPointer<NativeStolenReferenceAction>(freePtr);
             free(ob.AnalyzerWorkaround());
 
             Runtime.XDecref(StolenReference.DangerousFromPointer(type.DangerousGetAddress()));
@@ -112,7 +121,7 @@ namespace Python.Runtime
             {
                 return 0;
             }
-            var clearFunc = Marshal.GetDelegateForFunctionPointer<ClearFunc>(clearPtr);
+            var clearFunc = Marshal.GetDelegateForFunctionPointer<NativeBorrowedReferenceIntFunc>(clearPtr);
             return clearFunc(ob);
         }
 

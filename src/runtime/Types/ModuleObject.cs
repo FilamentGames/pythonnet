@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using AOT;
 
 namespace Python.Runtime
 {
@@ -276,6 +277,7 @@ namespace Python.Runtime
         /// namespaces. CLR modules implement a lazy pattern - the sub-modules
         /// and classes are created when accessed and cached for future use.
         /// </summary>
+        [MonoPInvokeCallback(typeof(BorrowedReferenceBorrowedReferenceNewReferenceFunc))]
         public static NewReference tp_getattro(BorrowedReference ob, BorrowedReference key)
         {
             var self = (ModuleObject)GetManagedObject(ob)!;
@@ -332,12 +334,14 @@ namespace Python.Runtime
         /// <summary>
         /// ModuleObject __repr__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(BorrowedReferenceNewReferenceFunc))]
         public static NewReference tp_repr(BorrowedReference ob)
         {
             var self = (ModuleObject)GetManagedObject(ob)!;
             return Runtime.PyString_FromString($"<module '{self.moduleName}'>");
         }
 
+        [MonoPInvokeCallback(typeof(BorrowedReferenceIntPtrIntPtrIntFunc))]
         public static int tp_traverse(BorrowedReference ob, IntPtr visit, IntPtr arg)
         {
             var self = (ModuleObject?)GetManagedObject(ob);
@@ -360,6 +364,7 @@ namespace Python.Runtime
         /// to set a few attributes
         /// </summary>
         [ForbidPythonThreads]
+        [MonoPInvokeCallback(typeof(BorrowedReferenceBorrowedReferenceBorrowedReferenceIntFunc))]
         public new static int tp_setattro(BorrowedReference ob, BorrowedReference key, BorrowedReference val)
         {
             var managedKey = Runtime.GetManagedString(key);
