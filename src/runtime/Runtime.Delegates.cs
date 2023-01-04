@@ -315,7 +315,7 @@ public unsafe partial class Runtime
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void BorrowedReferenceAction(BorrowedReference obj);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void StolenReferenceAction(ref StolenReference obj);
+        internal delegate void StolenReferenceAction(StolenReference obj);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void IntAction(int obj);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
