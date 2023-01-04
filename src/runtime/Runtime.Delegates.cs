@@ -18,8 +18,8 @@ public unsafe partial class Runtime
             Py_DecRef = GetDelegateByName<StolenReferenceAction>(nameof(Py_DecRef), GetUnmanagedDll(_PythonDll));
             Py_Initialize = GetDelegateByName<Action>(nameof(Py_Initialize), GetUnmanagedDll(_PythonDll));
             Py_InitializeEx = GetDelegateByName<IntAction>(nameof(Py_InitializeEx), GetUnmanagedDll(_PythonDll));
-            Py_IsInitialized = (delegate* unmanaged[Cdecl]<int>)GetFunctionByName(nameof(Py_IsInitialized), GetUnmanagedDll(_PythonDll));
-            Py_Finalize = (delegate* unmanaged[Cdecl]<void>)GetFunctionByName(nameof(Py_Finalize), GetUnmanagedDll(_PythonDll));
+            Py_IsInitialized = GetDelegateByName<IntFunc>(nameof(Py_IsInitialized), GetUnmanagedDll(_PythonDll));
+            Py_Finalize = GetDelegateByName<Action>(nameof(Py_Finalize), GetUnmanagedDll(_PythonDll));
             Py_NewInterpreter = (delegate* unmanaged[Cdecl]<PyThreadState*>)GetFunctionByName(nameof(Py_NewInterpreter), GetUnmanagedDll(_PythonDll));
             Py_EndInterpreter = (delegate* unmanaged[Cdecl]<PyThreadState*, void>)GetFunctionByName(nameof(Py_EndInterpreter), GetUnmanagedDll(_PythonDll));
             PyThreadState_New = (delegate* unmanaged[Cdecl]<PyInterpreterState*, PyThreadState*>)GetFunctionByName(nameof(PyThreadState_New), GetUnmanagedDll(_PythonDll));
@@ -27,7 +27,7 @@ public unsafe partial class Runtime
             _PyThreadState_UncheckedGet = (delegate* unmanaged[Cdecl]<PyThreadState*>)GetFunctionByName(nameof(_PyThreadState_UncheckedGet), GetUnmanagedDll(_PythonDll));
             try
             {
-                PyGILState_Check = (delegate* unmanaged[Cdecl]<int>)GetFunctionByName(nameof(PyGILState_Check), GetUnmanagedDll(_PythonDll));
+                PyGILState_Check = GetDelegateByName<IntFunc>(nameof(PyGILState_Check), GetUnmanagedDll(_PythonDll));
             }
             catch (MissingMethodException e)
             {
@@ -37,10 +37,10 @@ public unsafe partial class Runtime
             PyGILState_Release = (delegate* unmanaged[Cdecl]<PyGILState, void>)GetFunctionByName(nameof(PyGILState_Release), GetUnmanagedDll(_PythonDll));
             PyGILState_GetThisThreadState = (delegate* unmanaged[Cdecl]<PyThreadState*>)GetFunctionByName(nameof(PyGILState_GetThisThreadState), GetUnmanagedDll(_PythonDll));
             Py_Main = (delegate* unmanaged[Cdecl]<int, IntPtr, int>)GetFunctionByName(nameof(Py_Main), GetUnmanagedDll(_PythonDll));
-            PyEval_InitThreads = (delegate* unmanaged[Cdecl]<void>)GetFunctionByName(nameof(PyEval_InitThreads), GetUnmanagedDll(_PythonDll));
-            PyEval_ThreadsInitialized = (delegate* unmanaged[Cdecl]<int>)GetFunctionByName(nameof(PyEval_ThreadsInitialized), GetUnmanagedDll(_PythonDll));
-            PyEval_AcquireLock = (delegate* unmanaged[Cdecl]<void>)GetFunctionByName(nameof(PyEval_AcquireLock), GetUnmanagedDll(_PythonDll));
-            PyEval_ReleaseLock = (delegate* unmanaged[Cdecl]<void>)GetFunctionByName(nameof(PyEval_ReleaseLock), GetUnmanagedDll(_PythonDll));
+            PyEval_InitThreads = GetDelegateByName<Action>(nameof(PyEval_InitThreads), GetUnmanagedDll(_PythonDll));
+            PyEval_ThreadsInitialized = GetDelegateByName<IntFunc>(nameof(PyEval_ThreadsInitialized), GetUnmanagedDll(_PythonDll));
+            PyEval_AcquireLock = GetDelegateByName<Action>(nameof(PyEval_AcquireLock), GetUnmanagedDll(_PythonDll));
+            PyEval_ReleaseLock = GetDelegateByName<Action>(nameof(PyEval_ReleaseLock), GetUnmanagedDll(_PythonDll));
             PyEval_AcquireThread = (delegate* unmanaged[Cdecl]<PyThreadState*, void>)GetFunctionByName(nameof(PyEval_AcquireThread), GetUnmanagedDll(_PythonDll));
             PyEval_ReleaseThread = (delegate* unmanaged[Cdecl]<PyThreadState*, void>)GetFunctionByName(nameof(PyEval_ReleaseThread), GetUnmanagedDll(_PythonDll));
             PyEval_SaveThread = (delegate* unmanaged[Cdecl]<PyThreadState*>)GetFunctionByName(nameof(PyEval_SaveThread), GetUnmanagedDll(_PythonDll));
@@ -48,17 +48,17 @@ public unsafe partial class Runtime
             PyEval_GetBuiltins = (delegate* unmanaged[Cdecl]<BorrowedReference>)GetFunctionByName(nameof(PyEval_GetBuiltins), GetUnmanagedDll(_PythonDll));
             PyEval_GetGlobals = (delegate* unmanaged[Cdecl]<BorrowedReference>)GetFunctionByName(nameof(PyEval_GetGlobals), GetUnmanagedDll(_PythonDll));
             PyEval_GetLocals = (delegate* unmanaged[Cdecl]<BorrowedReference>)GetFunctionByName(nameof(PyEval_GetLocals), GetUnmanagedDll(_PythonDll));
-            Py_GetProgramName = (delegate* unmanaged[Cdecl]<IntPtr>)GetFunctionByName(nameof(Py_GetProgramName), GetUnmanagedDll(_PythonDll));
+            Py_GetProgramName = GetDelegateByName<IntPtrFunc>(nameof(Py_GetProgramName), GetUnmanagedDll(_PythonDll));
             Py_SetProgramName = (delegate* unmanaged[Cdecl]<IntPtr, void>)GetFunctionByName(nameof(Py_SetProgramName), GetUnmanagedDll(_PythonDll));
-            Py_GetPythonHome = (delegate* unmanaged[Cdecl]<IntPtr>)GetFunctionByName(nameof(Py_GetPythonHome), GetUnmanagedDll(_PythonDll));
+            Py_GetPythonHome = GetDelegateByName<IntPtrFunc>(nameof(Py_GetPythonHome), GetUnmanagedDll(_PythonDll));
             Py_SetPythonHome = (delegate* unmanaged[Cdecl]<IntPtr, void>)GetFunctionByName(nameof(Py_SetPythonHome), GetUnmanagedDll(_PythonDll));
-            Py_GetPath = (delegate* unmanaged[Cdecl]<IntPtr>)GetFunctionByName(nameof(Py_GetPath), GetUnmanagedDll(_PythonDll));
+            Py_GetPath = GetDelegateByName<IntPtrFunc>(nameof(Py_GetPath), GetUnmanagedDll(_PythonDll));
             Py_SetPath = (delegate* unmanaged[Cdecl]<IntPtr, void>)GetFunctionByName(nameof(Py_SetPath), GetUnmanagedDll(_PythonDll));
-            Py_GetVersion = (delegate* unmanaged[Cdecl]<IntPtr>)GetFunctionByName(nameof(Py_GetVersion), GetUnmanagedDll(_PythonDll));
-            Py_GetPlatform = (delegate* unmanaged[Cdecl]<IntPtr>)GetFunctionByName(nameof(Py_GetPlatform), GetUnmanagedDll(_PythonDll));
-            Py_GetCopyright = (delegate* unmanaged[Cdecl]<IntPtr>)GetFunctionByName(nameof(Py_GetCopyright), GetUnmanagedDll(_PythonDll));
-            Py_GetCompiler = (delegate* unmanaged[Cdecl]<IntPtr>)GetFunctionByName(nameof(Py_GetCompiler), GetUnmanagedDll(_PythonDll));
-            Py_GetBuildInfo = (delegate* unmanaged[Cdecl]<IntPtr>)GetFunctionByName(nameof(Py_GetBuildInfo), GetUnmanagedDll(_PythonDll));
+            Py_GetVersion = GetDelegateByName<IntPtrFunc>(nameof(Py_GetVersion), GetUnmanagedDll(_PythonDll));
+            Py_GetPlatform = GetDelegateByName<IntPtrFunc>(nameof(Py_GetPlatform), GetUnmanagedDll(_PythonDll));
+            Py_GetCopyright = GetDelegateByName<IntPtrFunc>(nameof(Py_GetCopyright), GetUnmanagedDll(_PythonDll));
+            Py_GetCompiler = GetDelegateByName<IntPtrFunc>(nameof(Py_GetCompiler), GetUnmanagedDll(_PythonDll));
+            Py_GetBuildInfo = GetDelegateByName<IntPtrFunc>(nameof(Py_GetBuildInfo), GetUnmanagedDll(_PythonDll));
             PyRun_SimpleStringFlags = (delegate* unmanaged[Cdecl]<StrPtr, in PyCompilerFlags, int>)GetFunctionByName(nameof(PyRun_SimpleStringFlags), GetUnmanagedDll(_PythonDll));
             PyRun_StringFlags = (delegate* unmanaged[Cdecl]<StrPtr, RunFlagType, BorrowedReference, BorrowedReference, in PyCompilerFlags, NewReference>)GetFunctionByName(nameof(PyRun_StringFlags), GetUnmanagedDll(_PythonDll));
             PyEval_EvalCode = (delegate* unmanaged[Cdecl]<BorrowedReference, BorrowedReference, BorrowedReference, NewReference>)GetFunctionByName(nameof(PyEval_EvalCode), GetUnmanagedDll(_PythonDll));
@@ -249,8 +249,8 @@ public unsafe partial class Runtime
             PyErr_Occurred = (delegate* unmanaged[Cdecl]<BorrowedReference>)GetFunctionByName(nameof(PyErr_Occurred), GetUnmanagedDll(_PythonDll));
             PyErr_Fetch = (delegate* unmanaged[Cdecl]<out NewReference, out NewReference, out NewReference, void>)GetFunctionByName(nameof(PyErr_Fetch), GetUnmanagedDll(_PythonDll));
             PyErr_Restore = (delegate* unmanaged[Cdecl]<StolenReference, StolenReference, StolenReference, void>)GetFunctionByName(nameof(PyErr_Restore), GetUnmanagedDll(_PythonDll));
-            PyErr_Clear = (delegate* unmanaged[Cdecl]<void>)GetFunctionByName(nameof(PyErr_Clear), GetUnmanagedDll(_PythonDll));
-            PyErr_Print = (delegate* unmanaged[Cdecl]<void>)GetFunctionByName(nameof(PyErr_Print), GetUnmanagedDll(_PythonDll));
+            PyErr_Clear = GetDelegateByName<Action>(nameof(PyErr_Clear), GetUnmanagedDll(_PythonDll));
+            PyErr_Print = GetDelegateByName<Action>(nameof(PyErr_Print), GetUnmanagedDll(_PythonDll));
             PyCell_Get = (delegate* unmanaged[Cdecl]<BorrowedReference, NewReference>)GetFunctionByName(nameof(PyCell_Get), GetUnmanagedDll(_PythonDll));
             PyCell_Set = (delegate* unmanaged[Cdecl]<BorrowedReference, BorrowedReference, int>)GetFunctionByName(nameof(PyCell_Set), GetUnmanagedDll(_PythonDll));
             PyGC_Collect = (delegate* unmanaged[Cdecl]<nint>)GetFunctionByName(nameof(PyGC_Collect), GetUnmanagedDll(_PythonDll));
@@ -276,7 +276,7 @@ public unsafe partial class Runtime
             catch (MissingMethodException) { }
             try
             {
-                _Py_IsFinalizing = (delegate* unmanaged[Cdecl]<int>)GetFunctionByName(nameof(_Py_IsFinalizing), GetUnmanagedDll(_PythonDll));
+                _Py_IsFinalizing = GetDelegateByName<IntFunc>(nameof(_Py_IsFinalizing), GetUnmanagedDll(_PythonDll));
             }
             catch (MissingMethodException) { }
 
@@ -313,27 +313,29 @@ public unsafe partial class Runtime
         internal delegate void BorrowedReferenceAction(BorrowedReference obj);
         internal delegate void StolenReferenceAction(ref StolenReference obj);
         internal delegate void IntAction(int obj);
+        internal delegate int IntFunc();
+        internal delegate IntPtr IntPtrFunc();
 
         internal static BorrowedReferenceAction Py_IncRef { get; }
         internal static StolenReferenceAction Py_DecRef { get; }
         internal static Action Py_Initialize { get; }
         internal static IntAction Py_InitializeEx { get; }
-        internal static delegate* unmanaged[Cdecl]<int> Py_IsInitialized { get; }
-        internal static delegate* unmanaged[Cdecl]<void> Py_Finalize { get; }
+        internal static IntFunc Py_IsInitialized { get; }
+        internal static Action Py_Finalize { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*> Py_NewInterpreter { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*, void> Py_EndInterpreter { get; }
         internal static delegate* unmanaged[Cdecl]<PyInterpreterState*, PyThreadState*> PyThreadState_New { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*> PyThreadState_Get { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*> _PyThreadState_UncheckedGet { get; }
-        internal static delegate* unmanaged[Cdecl]<int> PyGILState_Check { get; }
+        internal static IntFunc PyGILState_Check { get; }
         internal static delegate* unmanaged[Cdecl]<PyGILState> PyGILState_Ensure { get; }
         internal static delegate* unmanaged[Cdecl]<PyGILState, void> PyGILState_Release { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*> PyGILState_GetThisThreadState { get; }
         internal static delegate* unmanaged[Cdecl]<int, IntPtr, int> Py_Main { get; }
-        internal static delegate* unmanaged[Cdecl]<void> PyEval_InitThreads { get; }
-        internal static delegate* unmanaged[Cdecl]<int> PyEval_ThreadsInitialized { get; }
-        internal static delegate* unmanaged[Cdecl]<void> PyEval_AcquireLock { get; }
-        internal static delegate* unmanaged[Cdecl]<void> PyEval_ReleaseLock { get; }
+        internal static Action PyEval_InitThreads { get; }
+        internal static IntFunc PyEval_ThreadsInitialized { get; }
+        internal static Action PyEval_AcquireLock { get; }
+        internal static Action PyEval_ReleaseLock { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*, void> PyEval_AcquireThread { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*, void> PyEval_ReleaseThread { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*> PyEval_SaveThread { get; }
@@ -341,17 +343,17 @@ public unsafe partial class Runtime
         internal static delegate* unmanaged[Cdecl]<BorrowedReference> PyEval_GetBuiltins { get; }
         internal static delegate* unmanaged[Cdecl]<BorrowedReference> PyEval_GetGlobals { get; }
         internal static delegate* unmanaged[Cdecl]<BorrowedReference> PyEval_GetLocals { get; }
-        internal static delegate* unmanaged[Cdecl]<IntPtr> Py_GetProgramName { get; }
+        internal static IntPtrFunc Py_GetProgramName { get; }
         internal static delegate* unmanaged[Cdecl]<IntPtr, void> Py_SetProgramName { get; }
-        internal static delegate* unmanaged[Cdecl]<IntPtr> Py_GetPythonHome { get; }
+        internal static IntPtrFunc Py_GetPythonHome { get; }
         internal static delegate* unmanaged[Cdecl]<IntPtr, void> Py_SetPythonHome { get; }
-        internal static delegate* unmanaged[Cdecl]<IntPtr> Py_GetPath { get; }
+        internal static IntPtrFunc Py_GetPath { get; }
         internal static delegate* unmanaged[Cdecl]<IntPtr, void> Py_SetPath { get; }
-        internal static delegate* unmanaged[Cdecl]<IntPtr> Py_GetVersion { get; }
-        internal static delegate* unmanaged[Cdecl]<IntPtr> Py_GetPlatform { get; }
-        internal static delegate* unmanaged[Cdecl]<IntPtr> Py_GetCopyright { get; }
-        internal static delegate* unmanaged[Cdecl]<IntPtr> Py_GetCompiler { get; }
-        internal static delegate* unmanaged[Cdecl]<IntPtr> Py_GetBuildInfo { get; }
+        internal static IntPtrFunc Py_GetVersion { get; }
+        internal static IntPtrFunc Py_GetPlatform { get; }
+        internal static IntPtrFunc Py_GetCopyright { get; }
+        internal static IntPtrFunc Py_GetCompiler { get; }
+        internal static IntPtrFunc Py_GetBuildInfo { get; }
         internal static delegate* unmanaged[Cdecl]<StrPtr, in PyCompilerFlags, int> PyRun_SimpleStringFlags { get; }
         internal static delegate* unmanaged[Cdecl]<StrPtr, RunFlagType, BorrowedReference, BorrowedReference, in PyCompilerFlags, NewReference> PyRun_StringFlags { get; }
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, BorrowedReference, BorrowedReference, NewReference> PyEval_EvalCode { get; }
@@ -526,8 +528,8 @@ public unsafe partial class Runtime
         internal static delegate* unmanaged[Cdecl]<BorrowedReference> PyErr_Occurred { get; }
         internal static delegate* unmanaged[Cdecl]<out NewReference, out NewReference, out NewReference, void> PyErr_Fetch { get; }
         internal static delegate* unmanaged[Cdecl]<StolenReference, StolenReference, StolenReference, void> PyErr_Restore { get; }
-        internal static delegate* unmanaged[Cdecl]<void> PyErr_Clear { get; }
-        internal static delegate* unmanaged[Cdecl]<void> PyErr_Print { get; }
+        internal static Action PyErr_Clear { get; }
+        internal static Action PyErr_Print { get; }
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, NewReference> PyCell_Get { get; }
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, BorrowedReference, int> PyCell_Set { get; }
         internal static delegate* unmanaged[Cdecl]<nint> PyGC_Collect { get; }
@@ -547,7 +549,7 @@ public unsafe partial class Runtime
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, TypeSlotID, IntPtr> PyType_GetSlot { get; }
         internal static delegate* unmanaged[Cdecl]<in NativeTypeSpec, BorrowedReference, NewReference> PyType_FromSpecWithBases { get; }
         internal static delegate* unmanaged[Cdecl]<BorrowedReference, void> _Py_NewReference { get; }
-        internal static delegate* unmanaged[Cdecl]<int> _Py_IsFinalizing { get; }
+        internal static IntFunc _Py_IsFinalizing { get; }
         internal static IntPtr PyType_Type { get; }
         internal static IntPtr Py_NoSiteFlag { get; }
     }
