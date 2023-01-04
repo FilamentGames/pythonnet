@@ -346,6 +346,31 @@ public unsafe partial class Runtime
         internal delegate void StolenReferencevoidFunc(StolenReference a);
         internal delegate IntPtr nintIntPtrFunc(nint a);
         internal delegate nuint BorrowedReferencenuintFunc(BorrowedReference a);
+        internal delegate int intIntPtrintFunc(int a, IntPtr b);
+        internal delegate NewReference StrPtrBorrowedReferenceNewReferenceFunc(StrPtr a, BorrowedReference b);
+        internal delegate int BorrowedReferenceStrPtrintFunc(BorrowedReference a, StrPtr b);
+        internal delegate NewReference BorrowedReferenceStrPtrNewReferenceFunc(BorrowedReference a, StrPtr b);
+        internal delegate int BorrowedReferenceBorrowedReferenceintFunc(BorrowedReference a, BorrowedReference b);
+        internal delegate NewReference BorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference a, BorrowedReference b);
+        internal delegate NewReference BorrowedReferencenintNewReferenceFunc(BorrowedReference a, nint b);
+        internal delegate int BorrowedReferencenintintFunc(BorrowedReference a, nint b);
+        internal delegate nint BorrowedReferenceBorrowedReferencenintFunc(BorrowedReference a, BorrowedReference b);
+        internal delegate NewReference IntPtrnintNewReferenceFunc(IntPtr a, nint b);
+        internal delegate BorrowedReference BorrowedReferenceBorrowedReferenceBorrowedReferenceFunc(BorrowedReference a, BorrowedReference b);
+        internal delegate BorrowedReference BorrowedReferenceStrPtrBorrowedReferenceFunc(BorrowedReference a, StrPtr b);
+        internal delegate BorrowedReference BorrowedReferencenintBorrowedReferenceFunc(BorrowedReference a, nint b);
+        internal delegate int StrPtrBorrowedReferenceintFunc(StrPtr a, BorrowedReference b);
+        internal delegate bool BorrowedReferenceBorrowedReferenceboolFunc(BorrowedReference a, BorrowedReference b);
+        internal delegate IntPtr IntPtrnintIntPtrFunc(IntPtr a, nint b);
+        internal delegate void BorrowedReferenceStrPtrvoidFunc(BorrowedReference a, StrPtr b);
+        internal delegate void BorrowedReferenceBorrowedReferencevoidFunc(BorrowedReference a, BorrowedReference b);
+        internal delegate IntPtr BorrowedReferenceIntPtrIntPtrFunc(BorrowedReference a, IntPtr b);
+        internal delegate int BorrowedReferenceIntPtrintFunc(BorrowedReference a, IntPtr b);
+        internal delegate void BorrowedReferenceStolenReferencevoidFunc(BorrowedReference a, StolenReference b);
+        internal delegate int uintBorrowedReferenceintFunc(uint a, BorrowedReference b);
+        internal delegate int ulongBorrowedReferenceintFunc(ulong a, BorrowedReference b);
+        internal delegate NewReference BorrowedReferenceIntPtrNewReferenceFunc(BorrowedReference a, IntPtr b);
+        internal delegate IntPtr BorrowedReferenceTypeSlotIDIntPtrFunc(BorrowedReference a, TypeSlotID b);
 
         internal static BorrowedReferenceAction Py_IncRef { get; }
         internal static StolenReferenceAction Py_DecRef { get; }
