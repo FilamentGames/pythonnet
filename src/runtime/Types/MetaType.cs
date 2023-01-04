@@ -5,6 +5,8 @@ using System.Runtime.Serialization;
 
 using Python.Runtime.StateSerialization;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -25,6 +27,12 @@ namespace Python.Runtime
             "__instancecheck__",
             "__subclasscheck__",
         };
+
+        private delegate NewReference BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference tp, BorrowedReference args, BorrowedReference kw);
+        private delegate int BorrowedReferenceBorrowedReferenceBorrowedReferenceIntFunc(BorrowedReference tp, BorrowedReference name, BorrowedReference value);
+        private delegate NewReference BorrowedReferenceNintNewReferenceFunc(BorrowedReference mt, nint n);
+        private delegate void NewReferenceAction(NewReference tp);
+        private delegate NewReference BorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference tp, BorrowedReference idx);
 
         /// <summary>
         /// Metatype initialization. This bootstraps the CLR metatype to life.
@@ -62,11 +70,11 @@ namespace Python.Runtime
             }
             return PyCLRMetaType;
         }
-
         /// <summary>
         /// Metatype __new__ implementation. This is called to create a new
         /// class / type when a reflected class is subclassed.
         /// </summary>
+        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc))]
         public static NewReference tp_new(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
         {
             var len = Runtime.PyTuple_Size(args);
@@ -176,22 +184,23 @@ namespace Python.Runtime
             return type;
         }
 
-
+        [MonoPInvokeCallback (typeof (BorrowedReferenceNintNewReferenceFunc))]
         public static NewReference tp_alloc(BorrowedReference mt, nint n)
             => Runtime.PyType_GenericAlloc(mt, n);
 
 
+        [MonoPInvokeCallback (typeof (NewReferenceAction))]
         public static void tp_free(NewReference tp)
         {
             Runtime.PyObject_GC_Del(tp.Steal());
         }
 
-
         /// <summary>
         /// Metatype __call__ implementation. This is needed to ensure correct
         /// initialization (__init__ support), because the tp_call we inherit
         /// from PyType_Type won't call __init__ for metatypes it doesn't know.
-        /// </summary>
+        /// </summary
+        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc))]
         public static NewReference tp_call(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
         {
             IntPtr tp_new = Util.ReadIntPtr(tp, TypeOffset.tp_new);
@@ -220,6 +229,7 @@ namespace Python.Runtime
         /// the type object of a reflected type for a descriptor in order to
         /// support the right setattr behavior for static fields and properties.
         /// </summary>
+        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceBorrowedReferenceIntFunc))]
         public static int tp_setattro(BorrowedReference tp, BorrowedReference name, BorrowedReference value)
         {
             BorrowedReference descr = Runtime._PyType_Lookup(tp, name);
@@ -254,6 +264,7 @@ namespace Python.Runtime
         /// here we just delegate to the generic type def implementation. Its
         /// own mp_subscript
         /// </summary>
+        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceNewReferenceFunc))]
         public static NewReference mp_subscript(BorrowedReference tp, BorrowedReference idx)
         {
             if (GetManagedObject(tp) is ClassBase cb)
@@ -267,6 +278,7 @@ namespace Python.Runtime
         /// Dealloc implementation. This is called when a Python type generated
         /// by this metatype is no longer referenced from the Python runtime.
         /// </summary>
+        [MonoPInvokeCallback (typeof (NewReferenceAction))]
         public static void tp_dealloc(NewReference lastRef)
         {
             var weakrefs = Runtime.PyObject_GetWeakRefList(lastRef.Borrow());
@@ -332,11 +344,13 @@ namespace Python.Runtime
             return new NewReference(Runtime.PyFalse);
         }
 
+        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceNewReferenceFunc))]
         public static NewReference __instancecheck__(BorrowedReference tp, BorrowedReference args)
         {
             return DoInstanceCheck(tp, args, false);
         }
 
+        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceNewReferenceFunc))]
         public static NewReference __subclasscheck__(BorrowedReference tp, BorrowedReference args)
         {
             return DoInstanceCheck(tp, args, true);
