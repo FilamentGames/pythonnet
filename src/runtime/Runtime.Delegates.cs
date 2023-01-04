@@ -14,10 +14,10 @@ public unsafe partial class Runtime
 
         static Delegates()
         {
-            Py_IncRef = GetDelegateByName<BorrowedReference_Void_Fn>(nameof(Py_IncRef), GetUnmanagedDll(_PythonDll), typeof(BorrowedReference_Void_Fn));
-            Py_DecRef = GetDelegateByName<StolenReference_Void_Fn>(nameof(Py_DecRef), GetUnmanagedDll(_PythonDll), typeof(StolenReference_Void_Fn));
-            Py_Initialize = GetDelegateByName<Void_Fn>(nameof(Py_Initialize), GetUnmanagedDll(_PythonDll), typeof(Void_Fn));
-            Py_InitializeEx = GetDelegateByName<Int_Void_Fn>(nameof(Py_InitializeEx), GetUnmanagedDll(_PythonDll), typeof(Int_Void_Fn));
+            Py_IncRef = GetDelegateByName<BorrowedReference_Void_Fn>(nameof(Py_IncRef), GetUnmanagedDll(_PythonDll));
+            Py_DecRef = GetDelegateByName<StolenReference_Void_Fn>(nameof(Py_DecRef), GetUnmanagedDll(_PythonDll));
+            Py_Initialize = GetDelegateByName<Void_Fn>(nameof(Py_Initialize), GetUnmanagedDll(_PythonDll));
+            Py_InitializeEx = GetDelegateByName<Int_Void_Fn>(nameof(Py_InitializeEx), GetUnmanagedDll(_PythonDll));
             Py_IsInitialized = (delegate* unmanaged[Cdecl]<int>)GetFunctionByName(nameof(Py_IsInitialized), GetUnmanagedDll(_PythonDll));
             Py_Finalize = (delegate* unmanaged[Cdecl]<void>)GetFunctionByName(nameof(Py_Finalize), GetUnmanagedDll(_PythonDll));
             Py_NewInterpreter = (delegate* unmanaged[Cdecl]<PyThreadState*>)GetFunctionByName(nameof(Py_NewInterpreter), GetUnmanagedDll(_PythonDll));
@@ -305,9 +305,9 @@ public unsafe partial class Runtime
             }
         }
 
-        static T GetDelegateByName<T>(string functionName, global::System.IntPtr libraryHandle, Type delegateType) where T : Delegate
+        static T GetDelegateByName<T>(string functionName, global::System.IntPtr libraryHandle) where T : Delegate
         {
-            return (T) Marshal.GetDelegateForFunctionPointer(GetFunctionByName(functionName, libraryHandle), delegateType);
+            return Marshal.GetDelegateForFunctionPointer<T>(GetFunctionByName(functionName, libraryHandle));
         }
 
         internal delegate void BorrowedReference_Void_Fn(BorrowedReference obj);
