@@ -14,10 +14,10 @@ public unsafe partial class Runtime
 
         static Delegates()
         {
-            Py_IncRef = GetDelegateByName<BorrowedReference_Void_Fn>(nameof(Py_IncRef), GetUnmanagedDll(_PythonDll), typeof(BorrowedReference_Void_Fn));
-            Py_DecRef = GetDelegateByName<StolenReference_Void_Fn>(nameof(Py_DecRef), GetUnmanagedDll(_PythonDll), typeof(StolenReference_Void_Fn));
-            Py_Initialize = GetDelegateByName<Void_Fn>(nameof(Py_Initialize), GetUnmanagedDll(_PythonDll), typeof(Void_Fn));
-            Py_InitializeEx = GetDelegateByName<Int_Void_Fn>(nameof(Py_InitializeEx), GetUnmanagedDll(_PythonDll), typeof(Int_Void_Fn));
+            Py_IncRef = GetDelegateByName<Action<IntPtr>>(nameof(Py_IncRef), GetUnmanagedDll(_PythonDll));
+            Py_DecRef = GetDelegateByName<Action<IntPtr>>(nameof(Py_DecRef), GetUnmanagedDll(_PythonDll));
+            Py_Initialize = GetDelegateByName<Action>(nameof(Py_Initialize), GetUnmanagedDll(_PythonDll));
+            Py_InitializeEx = GetDelegateByName<Action<int>>(nameof(Py_InitializeEx), GetUnmanagedDll(_PythonDll));
             Py_IsInitialized = (delegate* unmanaged[Cdecl]<int>)GetFunctionByName(nameof(Py_IsInitialized), GetUnmanagedDll(_PythonDll));
             Py_Finalize = (delegate* unmanaged[Cdecl]<void>)GetFunctionByName(nameof(Py_Finalize), GetUnmanagedDll(_PythonDll));
             Py_NewInterpreter = (delegate* unmanaged[Cdecl]<PyThreadState*>)GetFunctionByName(nameof(Py_NewInterpreter), GetUnmanagedDll(_PythonDll));
@@ -305,20 +305,15 @@ public unsafe partial class Runtime
             }
         }
 
-        static T GetDelegateByName<T>(string functionName, global::System.IntPtr libraryHandle, Type delegateType) where T : Delegate
+        static T GetDelegateByName<T>(string functionName, global::System.IntPtr libraryHandle) where T : Delegate
         {
-            return (T) Marshal.GetDelegateForFunctionPointer(GetFunctionByName(functionName, libraryHandle), delegateType);
+            return Marshal.GetDelegateForFunctionPointer<T>(GetFunctionByName(functionName, libraryHandle));
         }
 
-        internal delegate void BorrowedReference_Void_Fn(BorrowedReference obj);
-        internal delegate void StolenReference_Void_Fn(ref StolenReference obj);
-        internal delegate void Void_Fn();
-        internal delegate void Int_Void_Fn(int obj);
-
-        internal static BorrowedReference_Void_Fn Py_IncRef { get; }
-        internal static StolenReference_Void_Fn Py_DecRef { get; }
-        internal static Void_Fn Py_Initialize { get; }
-        internal static Int_Void_Fn Py_InitializeEx { get; }
+        internal static Action<IntPtr> Py_IncRef { get; }
+        internal static Action<IntPtr> Py_DecRef { get; }
+        internal static Action Py_Initialize { get; }
+        internal static Action<int> Py_InitializeEx { get; }
         internal static delegate* unmanaged[Cdecl]<int> Py_IsInitialized { get; }
         internal static delegate* unmanaged[Cdecl]<void> Py_Finalize { get; }
         internal static delegate* unmanaged[Cdecl]<PyThreadState*> Py_NewInterpreter { get; }
