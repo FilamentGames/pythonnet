@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Text;
 
 using Python.Runtime.Native;
@@ -52,106 +51,7 @@ namespace Python.Runtime
             string name = $"__{dtype.FullName}Dispatcher";
             name = name.Replace('.', '_');
             name = name.Replace('+', '_');
-            TypeBuilder tb = codeGenerator.DefineType(name, basetype);
-
-            // Generate a constructor for the generated type that calls the
-            // appropriate constructor of the Dispatcher base type.
-            MethodAttributes ma = MethodAttributes.Public |
-                                  MethodAttributes.HideBySig |
-                                  MethodAttributes.SpecialName |
-                                  MethodAttributes.RTSpecialName;
-            var cc = CallingConventions.Standard;
-            Type[] args = { pyobjType, typetype };
-            ConstructorBuilder cb = tb.DefineConstructor(ma, cc, args);
-            ConstructorInfo ci = basetype.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic, null, args, null);
-            ILGenerator il = cb.GetILGenerator();
-            il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Ldarg_1);
-            il.Emit(OpCodes.Ldarg_2);
-            il.Emit(OpCodes.Call, ci);
-            il.Emit(OpCodes.Ret);
-
-            // Method generation: we generate a method named "Invoke" on the
-            // dispatcher type, whose signature matches the delegate type for
-            // which it is generated. The method body simply packages the
-            // arguments and hands them to the Dispatch() method, which deals
-            // with converting the arguments, calling the Python method and
-            // converting the result of the call.
-            MethodInfo method = dtype.GetMethod("Invoke");
-            ParameterInfo[] pi = method.GetParameters();
-
-            var signature = new Type[pi.Length];
-            for (var i = 0; i < pi.Length; i++)
-            {
-                signature[i] = pi[i].ParameterType;
-            }
-
-            MethodBuilder mb = tb.DefineMethod("Invoke", MethodAttributes.Public, method.ReturnType, signature);
-
-            il = mb.GetILGenerator();
-            // loc_0 = new object[pi.Length]
-            il.DeclareLocal(arrayType);
-            il.Emit(OpCodes.Ldc_I4, pi.Length);
-            il.Emit(OpCodes.Newobj, arrayCtor);
-            il.Emit(OpCodes.Stloc_0);
-
-            bool anyByRef = false;
-
-            for (var c = 0; c < signature.Length; c++)
-            {
-                Type t = signature[c];
-                il.Emit(OpCodes.Ldloc_0);
-                il.Emit(OpCodes.Ldc_I4, c);
-                il.Emit(OpCodes.Ldarg_S, (byte)(c + 1));
-
-                if (t.IsByRef)
-                {
-                    // The argument is a pointer.  We must dereference the pointer to get the value or object it points to.
-                    t = t.GetElementType();
-                    if (t.IsValueType)
-                    {
-                        il.Emit(OpCodes.Ldobj, t);
-                    }
-                    else
-                    {
-                        il.Emit(OpCodes.Ldind_Ref);
-                    }
-                    anyByRef = true;
-                }
-
-                if (t.IsValueType)
-                {
-                    il.Emit(OpCodes.Box, t);
-                }
-
-                // args[c] = arg
-                il.Emit(OpCodes.Stelem_Ref);
-            }
-
-            il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Ldloc_0);
-            il.Emit(OpCodes.Call, dispatch);
-
-            if (anyByRef)
-            {
-                // Dispatch() will have modified elements of the args list that correspond to out parameters.
-                CodeGenerator.GenerateMarshalByRefsBack(il, signature);
-            }
-
-            if (method.ReturnType == voidtype)
-            {
-                il.Emit(OpCodes.Pop);
-            }
-            else if (method.ReturnType.IsValueType)
-            {
-                il.Emit(OpCodes.Unbox_Any, method.ReturnType);
-            }
-
-            il.Emit(OpCodes.Ret);
-
-            Type disp = tb.CreateType();
-            cache[dtype] = disp;
-            return disp;
+            return null;
         }
 
         /// <summary>
