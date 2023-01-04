@@ -373,7 +373,10 @@ namespace Python.Runtime
             return 0;
         }
 
+        private delegate int GetBufferFunc(BorrowedReference obj, out Py_buffer buffer, PyBUF flags);
+
         #region Buffer protocol
+        [MonoPInvokeCallback(typeof(GetBufferFunc))]
         static int GetBuffer(BorrowedReference obj, out Py_buffer buffer, PyBUF flags)
         {
             buffer = default;
@@ -429,6 +432,10 @@ namespace Python.Runtime
 
             return 0;
         }
+
+        private delegate void ReleaseBufferAction(BorrowedReference obj, ref Py_buffer buffer);
+
+        [MonoPInvokeCallback(typeof(ReleaseBufferAction))]
         static void ReleaseBuffer(BorrowedReference obj, ref Py_buffer buffer)
         {
             if (buffer._internal == IntPtr.Zero) return;

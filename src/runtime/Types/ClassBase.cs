@@ -547,24 +547,28 @@ namespace Python.Runtime
             return python.NewReferenceOrNull();
         }
 
+        [MonoPInvokeCallback(typeof(TpSubscriptFunc))]
         static NewReference DoConvertInt(BorrowedReference ob)
         {
             var self = (CLRObject)GetManagedObject(ob)!;
             return Runtime.PyLong_FromLongLong(Convert.ToInt64(self.inst));
         }
 
+        [MonoPInvokeCallback(typeof(TpSubscriptFunc))]
         static NewReference DoConvertUInt(BorrowedReference ob)
         {
             var self = (CLRObject)GetManagedObject(ob)!;
             return Runtime.PyLong_FromUnsignedLongLong(Convert.ToUInt64(self.inst));
         }
 
+        [MonoPInvokeCallback(typeof(TpSubscriptFunc))]
         static NewReference DoConvertBooleanInt(BorrowedReference ob)
         {
             var self = (CLRObject)GetManagedObject(ob)!;
             return Runtime.PyInt_FromInt32((bool)self.inst ? 1 : 0);
         }
 
+        [MonoPInvokeCallback(typeof(TpSubscriptFunc))]
         static NewReference DoConvertFloat(BorrowedReference ob)
         {
             var self = (CLRObject)GetManagedObject(ob)!;
