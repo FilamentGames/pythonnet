@@ -709,7 +709,7 @@ namespace Python.Runtime
         /// </summary>
         /// <param name="ob">PyObject Ptr</param>
 
-        internal static void Py_IncRef(BorrowedReference ob) => Delegates.Py_IncRef(ob.DangerousGetAddress());
+        internal static void Py_IncRef(BorrowedReference ob) => Delegates.Py_IncRef(ob);
 
         /// <summary>
         /// Export of Macro Py_XDecRef. Use XDecref instead.
@@ -717,7 +717,7 @@ namespace Python.Runtime
         /// </summary>
         /// <param name="ob">PyObject Ptr</param>
 
-        internal static void Py_DecRef(StolenReference ob) => Delegates.Py_DecRef(ob.DangerousGetAddress());
+        internal static void Py_DecRef(StolenReference ob) => Delegates.Py_DecRef(ref ob);
 
 
         internal static void Py_Initialize() => Delegates.Py_Initialize();
