@@ -311,96 +311,185 @@ public unsafe partial class Runtime
             return Marshal.GetDelegateForFunctionPointer<T>(GetFunctionByName(functionName, libraryHandle));
         }
 
-        internal delegate void BorrowedReferenceAction(BorrowedReference obj);
-        internal delegate void StolenReferenceAction(ref StolenReference obj);
-        internal delegate void IntAction(int obj);
-        internal delegate int IntFunc();
-        internal delegate nint nintFunc();
-        internal delegate IntPtr IntPtrFunc();
-        internal delegate NewReference BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference a, BorrowedReference b, BorrowedReference c);
-        internal delegate PyThreadState* PyThreadStateFunc();
-        internal delegate PyGILState PyGILStateFunc();
-        internal delegate BorrowedReference BorrowedReferenceFunc();
-        internal delegate NewReference NewReferenceFunc();
-        internal delegate void PyThreadStatevoidFunc(PyThreadState* a);
-        internal delegate PyThreadState* PyInterpreterStatePyThreadStateFunc(PyInterpreterState* a);
-        internal delegate void BorrowedReferencevoidFunc(BorrowedReference a);
-        internal delegate int BorrowedReferenceintFunc(BorrowedReference a);
-        internal delegate nint StrPtrnintFunc(StrPtr a);
-        internal delegate void IntPtrvoidFunc(IntPtr a);
-        internal delegate NewReference BorrowedReferenceNewReferenceFunc(BorrowedReference a);
-        internal delegate bool BorrowedReferenceboolFunc(BorrowedReference a);
-        internal delegate NewReference longNewReferenceFunc(long a);
-        internal delegate NewReference ulongNewReferenceFunc(ulong a);
-        internal delegate long BorrowedReferencelongFunc(BorrowedReference a);
-        internal delegate ulong BorrowedReferenceulongFunc(BorrowedReference a);
-        internal delegate NewReference IntPtrNewReferenceFunc(IntPtr a);
-        internal delegate IntPtr BorrowedReferenceIntPtrFunc(BorrowedReference a);
-        internal delegate NewReference doubleNewReferenceFunc(double a);
-        internal delegate double BorrowedReferencedoubleFunc(BorrowedReference a);
-        internal delegate nint BorrowedReferencenintFunc(BorrowedReference a);
-        internal delegate NewReference intNewReferenceFunc(int a);
-        internal delegate NewReference StrPtrNewReferenceFunc(StrPtr a);
-        internal delegate NewReference nintNewReferenceFunc(nint a);
-        internal delegate void PyGILStatevoidFunc(PyGILState a);
-        internal delegate BorrowedReference BorrowedReferenceBorrowedReferenceFunc(BorrowedReference a);
-        internal delegate BorrowedReference StrPtrBorrowedReferenceFunc(StrPtr a);
-        internal delegate void StolenReferencevoidFunc(ref StolenReference a);
-        internal delegate IntPtr nintIntPtrFunc(nint a);
-        internal delegate nuint BorrowedReferencenuintFunc(BorrowedReference a);
-        internal delegate int intIntPtrintFunc(int a, IntPtr b);
-        internal delegate NewReference StrPtrBorrowedReferenceNewReferenceFunc(StrPtr a, BorrowedReference b);
-        internal delegate int BorrowedReferenceStrPtrintFunc(BorrowedReference a, StrPtr b);
-        internal delegate NewReference BorrowedReferenceStrPtrNewReferenceFunc(BorrowedReference a, StrPtr b);
-        internal delegate int BorrowedReferenceBorrowedReferenceintFunc(BorrowedReference a, BorrowedReference b);
-        internal delegate NewReference BorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference a, BorrowedReference b);
-        internal delegate NewReference BorrowedReferencenintNewReferenceFunc(BorrowedReference a, nint b);
-        internal delegate int BorrowedReferencenintintFunc(BorrowedReference a, nint b);
-        internal delegate nint BorrowedReferenceBorrowedReferencenintFunc(BorrowedReference a, BorrowedReference b);
-        internal delegate NewReference IntPtrnintNewReferenceFunc(IntPtr a, nint b);
-        internal delegate BorrowedReference BorrowedReferenceBorrowedReferenceBorrowedReferenceFunc(BorrowedReference a, BorrowedReference b);
-        internal delegate BorrowedReference BorrowedReferenceStrPtrBorrowedReferenceFunc(BorrowedReference a, StrPtr b);
-        internal delegate BorrowedReference BorrowedReferencenintBorrowedReferenceFunc(BorrowedReference a, nint b);
-        internal delegate int StrPtrBorrowedReferenceintFunc(StrPtr a, BorrowedReference b);
-        internal delegate bool BorrowedReferenceBorrowedReferenceboolFunc(BorrowedReference a, BorrowedReference b);
-        internal delegate IntPtr IntPtrnintIntPtrFunc(IntPtr a, nint b);
-        internal delegate void BorrowedReferenceStrPtrvoidFunc(BorrowedReference a, StrPtr b);
-        internal delegate void BorrowedReferenceBorrowedReferencevoidFunc(BorrowedReference a, BorrowedReference b);
-        internal delegate IntPtr BorrowedReferenceIntPtrIntPtrFunc(BorrowedReference a, IntPtr b);
-        internal delegate int BorrowedReferenceIntPtrintFunc(BorrowedReference a, IntPtr b);
-        internal delegate void BorrowedReferenceStolenReferencevoidFunc(BorrowedReference a, ref StolenReference b);
-        internal delegate int uintBorrowedReferenceintFunc(uint a, BorrowedReference b);
-        internal delegate int ulongBorrowedReferenceintFunc(ulong a, BorrowedReference b);
-        internal delegate NewReference BorrowedReferenceIntPtrNewReferenceFunc(BorrowedReference a, IntPtr b);
-        internal delegate IntPtr BorrowedReferenceTypeSlotIDIntPtrFunc(BorrowedReference a, TypeSlotID b);
-        internal delegate int BorrowedReferenceStrPtrBorrowedReferenceintFunc(BorrowedReference a, StrPtr b, BorrowedReference c);
-        internal delegate int BorrowedReferenceBorrowedReferenceBorrowedReferenceintFunc(BorrowedReference a, BorrowedReference b, BorrowedReference c);
-        internal delegate int BorrowedReferenceBorrowedReferenceintintFunc(BorrowedReference a, BorrowedReference b, int c);
-        internal delegate NewReference StrPtrIntPtrintNewReferenceFunc(StrPtr a, IntPtr b, int c);
-        internal delegate int BorrowedReferencenintBorrowedReferenceintFunc(BorrowedReference a, nint b, BorrowedReference c);
-        internal delegate NewReference BorrowedReferencenintnintNewReferenceFunc(BorrowedReference a, nint b, nint c);
-        internal delegate int BorrowedReferencenintnintintFunc(BorrowedReference a, nint b, nint c);
-        internal delegate int BorrowedReferencenintStolenReferenceintFunc(BorrowedReference a, nint b, ref StolenReference c);
-        internal delegate int BorrowedReferenceStrPtrIntPtrintFunc(BorrowedReference a, StrPtr b, IntPtr c);
-        internal delegate void intIntPtrintvoidFunc(int a, IntPtr b, int c);
-        internal delegate void StolenReferenceStolenReferenceStolenReferencevoidFunc(ref StolenReference a, ref StolenReference b, ref StolenReference c);
-        internal delegate NewReference IntPtrIntPtrIntPtrNewReferenceFunc(IntPtr a, IntPtr b, IntPtr c);
-        internal delegate void Py_buffervoidFunc(ref Py_buffer a);
-        internal delegate int StrPtrPyCompilerFlagsintFunc(StrPtr a, in PyCompilerFlags b);
-        internal delegate int Py_buffercharintFunc(ref Py_buffer a, char b);
-        internal delegate NewReference NativeTypeSpecBorrowedReferenceNewReferenceFunc(in NativeTypeSpec a, BorrowedReference b);
-        internal delegate int BorrowedReferencePy_bufferintintFunc(BorrowedReference a, out Py_buffer b, int c);
-        internal delegate void NewReferenceNewReferenceNewReferencevoidFunc(out NewReference a, out NewReference b, out NewReference c);
-        internal delegate NewReference StrPtrRunFlagTypeBorrowedReferenceBorrowedReferenceinPyCompilerFlagsNewReferenceFunc(StrPtr a, RunFlagType b, BorrowedReference c, BorrowedReference d, in PyCompilerFlags e);
-        internal delegate NewReference StrPtrBorrowedReferenceintinPyCompilerFlagsintNewReferenceFunc(StrPtr a, BorrowedReference b, int c, in PyCompilerFlags d, int e);
-        internal delegate IntPtr refPy_buffernintArrayIntPtrFunc(ref Py_buffer a, nint[] b);
-        internal delegate int refPy_bufferIntPtrIntPtrcharintFunc(ref Py_buffer a, IntPtr b, IntPtr c, char d);
-        internal delegate int IntPtrrefPy_bufferIntPtrcharintFunc(IntPtr a, ref Py_buffer b, IntPtr c, char d);
-        internal delegate void intIntPtrIntPtrintcharvoidFunc(int a, IntPtr b, IntPtr c, int d, char e);
-        internal delegate int refPy_bufferBorrowedReferenceIntPtrIntPtrintintintFunc(ref Py_buffer a, BorrowedReference b, IntPtr c, IntPtr d, int e, int f);
-        internal delegate int BorrowedReferencenintnintBorrowedReferenceIntFunc(BorrowedReference a, nint b, nint c, BorrowedReference d);
-        internal delegate NewReference IntPtrnintIntPtrIntPtrNewReferenceFunc(IntPtr a, nint b, IntPtr c, IntPtr d);
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void BorrowedReferenceAction(BorrowedReference obj);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void StolenReferenceAction(ref StolenReference obj);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void IntAction(int obj);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int IntFunc();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate nint nintFunc();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate IntPtr IntPtrFunc();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference a, BorrowedReference b, BorrowedReference c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate PyThreadState* PyThreadStateFunc();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate PyGILState PyGILStateFunc();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate BorrowedReference BorrowedReferenceFunc();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference NewReferenceFunc();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void PyThreadStatevoidFunc(PyThreadState* a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate PyThreadState* PyInterpreterStatePyThreadStateFunc(PyInterpreterState* a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void BorrowedReferencevoidFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferenceintFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate nint StrPtrnintFunc(StrPtr a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void IntPtrvoidFunc(IntPtr a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference BorrowedReferenceNewReferenceFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate bool BorrowedReferenceboolFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference longNewReferenceFunc(long a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference ulongNewReferenceFunc(ulong a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate long BorrowedReferencelongFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate ulong BorrowedReferenceulongFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference IntPtrNewReferenceFunc(IntPtr a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate IntPtr BorrowedReferenceIntPtrFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference doubleNewReferenceFunc(double a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate double BorrowedReferencedoubleFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate nint BorrowedReferencenintFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference intNewReferenceFunc(int a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference StrPtrNewReferenceFunc(StrPtr a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference nintNewReferenceFunc(nint a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void PyGILStatevoidFunc(PyGILState a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate BorrowedReference BorrowedReferenceBorrowedReferenceFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate BorrowedReference StrPtrBorrowedReferenceFunc(StrPtr a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void StolenReferencevoidFunc(ref StolenReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate IntPtr nintIntPtrFunc(nint a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate nuint BorrowedReferencenuintFunc(BorrowedReference a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int intIntPtrintFunc(int a, IntPtr b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference StrPtrBorrowedReferenceNewReferenceFunc(StrPtr a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferenceStrPtrintFunc(BorrowedReference a, StrPtr b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference BorrowedReferenceStrPtrNewReferenceFunc(BorrowedReference a, StrPtr b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferenceBorrowedReferenceintFunc(BorrowedReference a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference BorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference BorrowedReferencenintNewReferenceFunc(BorrowedReference a, nint b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferencenintintFunc(BorrowedReference a, nint b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate nint BorrowedReferenceBorrowedReferencenintFunc(BorrowedReference a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference IntPtrnintNewReferenceFunc(IntPtr a, nint b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate BorrowedReference BorrowedReferenceBorrowedReferenceBorrowedReferenceFunc(BorrowedReference a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate BorrowedReference BorrowedReferenceStrPtrBorrowedReferenceFunc(BorrowedReference a, StrPtr b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate BorrowedReference BorrowedReferencenintBorrowedReferenceFunc(BorrowedReference a, nint b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int StrPtrBorrowedReferenceintFunc(StrPtr a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate bool BorrowedReferenceBorrowedReferenceboolFunc(BorrowedReference a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate IntPtr IntPtrnintIntPtrFunc(IntPtr a, nint b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void BorrowedReferenceStrPtrvoidFunc(BorrowedReference a, StrPtr b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void BorrowedReferenceBorrowedReferencevoidFunc(BorrowedReference a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate IntPtr BorrowedReferenceIntPtrIntPtrFunc(BorrowedReference a, IntPtr b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferenceIntPtrintFunc(BorrowedReference a, IntPtr b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void BorrowedReferenceStolenReferencevoidFunc(BorrowedReference a, ref StolenReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int uintBorrowedReferenceintFunc(uint a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int ulongBorrowedReferenceintFunc(ulong a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference BorrowedReferenceIntPtrNewReferenceFunc(BorrowedReference a, IntPtr b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate IntPtr BorrowedReferenceTypeSlotIDIntPtrFunc(BorrowedReference a, TypeSlotID b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferenceStrPtrBorrowedReferenceintFunc(BorrowedReference a, StrPtr b, BorrowedReference c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferenceBorrowedReferenceBorrowedReferenceintFunc(BorrowedReference a, BorrowedReference b, BorrowedReference c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferenceBorrowedReferenceintintFunc(BorrowedReference a, BorrowedReference b, int c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference StrPtrIntPtrintNewReferenceFunc(StrPtr a, IntPtr b, int c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferencenintBorrowedReferenceintFunc(BorrowedReference a, nint b, BorrowedReference c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference BorrowedReferencenintnintNewReferenceFunc(BorrowedReference a, nint b, nint c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferencenintnintintFunc(BorrowedReference a, nint b, nint c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferencenintStolenReferenceintFunc(BorrowedReference a, nint b, ref StolenReference c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferenceStrPtrIntPtrintFunc(BorrowedReference a, StrPtr b, IntPtr c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void intIntPtrintvoidFunc(int a, IntPtr b, int c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void StolenReferenceStolenReferenceStolenReferencevoidFunc(ref StolenReference a, ref StolenReference b, ref StolenReference c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference IntPtrIntPtrIntPtrNewReferenceFunc(IntPtr a, IntPtr b, IntPtr c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void Py_buffervoidFunc(ref Py_buffer a);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int StrPtrPyCompilerFlagsintFunc(StrPtr a, in PyCompilerFlags b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int Py_buffercharintFunc(ref Py_buffer a, char b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference NativeTypeSpecBorrowedReferenceNewReferenceFunc(in NativeTypeSpec a, BorrowedReference b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferencePy_bufferintintFunc(BorrowedReference a, out Py_buffer b, int c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void NewReferenceNewReferenceNewReferencevoidFunc(out NewReference a, out NewReference b, out NewReference c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference StrPtrRunFlagTypeBorrowedReferenceBorrowedReferenceinPyCompilerFlagsNewReferenceFunc(StrPtr a, RunFlagType b, BorrowedReference c, BorrowedReference d, in PyCompilerFlags e);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference StrPtrBorrowedReferenceintinPyCompilerFlagsintNewReferenceFunc(StrPtr a, BorrowedReference b, int c, in PyCompilerFlags d, int e);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate IntPtr refPy_buffernintArrayIntPtrFunc(ref Py_buffer a, nint[] b);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int refPy_bufferIntPtrIntPtrcharintFunc(ref Py_buffer a, IntPtr b, IntPtr c, char d);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int IntPtrrefPy_bufferIntPtrcharintFunc(IntPtr a, ref Py_buffer b, IntPtr c, char d);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void intIntPtrIntPtrintcharvoidFunc(int a, IntPtr b, IntPtr c, int d, char e);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int refPy_bufferBorrowedReferenceIntPtrIntPtrintintintFunc(ref Py_buffer a, BorrowedReference b, IntPtr c, IntPtr d, int e, int f);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate int BorrowedReferencenintnintBorrowedReferenceIntFunc(BorrowedReference a, nint b, nint c, BorrowedReference d);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate NewReference IntPtrnintIntPtrIntPtrNewReferenceFunc(IntPtr a, nint b, IntPtr c, IntPtr d);
 
         internal static BorrowedReferenceAction Py_IncRef { get; }
         internal static StolenReferenceAction Py_DecRef { get; }
