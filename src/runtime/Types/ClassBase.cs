@@ -382,7 +382,7 @@ namespace Python.Runtime
             {
                 return 0;
             }
-            var clear = (delegate* unmanaged[Cdecl]<BorrowedReference, int>)clearPtr;
+            var clear = Marshal.GetDelegateForFunctionPointer<ClearFunc>(clearPtr);
 
             bool usesSubtypeClear = clearPtr == TypeManager.subtype_clear;
             if (usesSubtypeClear)
