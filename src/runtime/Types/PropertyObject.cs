@@ -2,6 +2,8 @@ using System;
 using System.Reflection;
 using System.Runtime.Serialization;
 
+using AOT;
+
 namespace Python.Runtime
 {
     using MaybeMethodInfo = MaybeMethodBase<MethodInfo>;
@@ -36,6 +38,7 @@ namespace Python.Runtime
         /// value of the property on the given object. The returned value
         /// is converted to an appropriately typed Python object.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpDescrGetFunc))]
         public static NewReference tp_descr_get(BorrowedReference ds, BorrowedReference ob, BorrowedReference tp)
         {
             var self = (PropertyObject)GetManagedObject(ds)!;
@@ -99,6 +102,7 @@ namespace Python.Runtime
         /// a property based on the given Python value. The Python value must
         /// be convertible to the type of the property.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpDescrSetFunc))]
         public static int tp_descr_set(BorrowedReference ds, BorrowedReference ob, BorrowedReference val)
         {
             var self = (PropertyObject)GetManagedObject(ds)!;
@@ -173,6 +177,7 @@ namespace Python.Runtime
         /// <summary>
         /// Descriptor __repr__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpReprFunc))]
         public static NewReference tp_repr(BorrowedReference ob)
         {
             var self = (PropertyObject)GetManagedObject(ob)!;

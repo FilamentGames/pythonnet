@@ -1,5 +1,7 @@
 using System;
 
+using AOT;
+
 namespace Python.Runtime;
 
 /// <summary>
@@ -22,6 +24,7 @@ internal class ExceptionClassObject : ClassObject
     /// <summary>
     /// Exception __repr__ implementation
     /// </summary>
+    [MonoPInvokeCallback(typeof(TpReprFunc))]
     public new static NewReference tp_repr(BorrowedReference ob)
     {
         Exception? e = ToException(ob);
@@ -45,6 +48,7 @@ internal class ExceptionClassObject : ClassObject
     /// <summary>
     /// Exception __str__ implementation
     /// </summary>
+    [MonoPInvokeCallback(typeof(TpStrFunc))]
     public new static NewReference tp_str(BorrowedReference ob)
     {
         Exception? e = ToException(ob);

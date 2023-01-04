@@ -68,7 +68,7 @@ namespace Python.Runtime
         /// Metatype __new__ implementation. This is called to create a new
         /// class / type when a reflected class is subclassed.
         /// </summary>
-        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc))]
+        [MonoPInvokeCallback (typeof (TpCallFunc))]
         public static NewReference tp_new(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
         {
             var len = Runtime.PyTuple_Size(args);
@@ -178,12 +178,12 @@ namespace Python.Runtime
             return type;
         }
 
-        [MonoPInvokeCallback (typeof (BorrowedReferenceNintNewReferenceFunc))]
+        [MonoPInvokeCallback (typeof (TpAllocFunc))]
         public static NewReference tp_alloc(BorrowedReference mt, nint n)
             => Runtime.PyType_GenericAlloc(mt, n);
 
 
-        [MonoPInvokeCallback (typeof (NewReferenceAction))]
+        [MonoPInvokeCallback (typeof (TpFreeAction))]
         public static void tp_free(NewReference tp)
         {
             Runtime.PyObject_GC_Del(tp.Steal());
@@ -194,7 +194,7 @@ namespace Python.Runtime
         /// initialization (__init__ support), because the tp_call we inherit
         /// from PyType_Type won't call __init__ for metatypes it doesn't know.
         /// </summary
-        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc))]
+        [MonoPInvokeCallback (typeof (TpCallFunc))]
         public static NewReference tp_call(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
         {
             IntPtr tp_new = Util.ReadIntPtr(tp, TypeOffset.tp_new);
@@ -223,7 +223,7 @@ namespace Python.Runtime
         /// the type object of a reflected type for a descriptor in order to
         /// support the right setattr behavior for static fields and properties.
         /// </summary>
-        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceBorrowedReferenceIntFunc))]
+        [MonoPInvokeCallback (typeof (TpSetAttroFunc))]
         public static int tp_setattro(BorrowedReference tp, BorrowedReference name, BorrowedReference value)
         {
             BorrowedReference descr = Runtime._PyType_Lookup(tp, name);
@@ -258,7 +258,7 @@ namespace Python.Runtime
         /// here we just delegate to the generic type def implementation. Its
         /// own mp_subscript
         /// </summary>
-        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceNewReferenceFunc))]
+        [MonoPInvokeCallback (typeof (MpOperatorFunc))]
         public static NewReference mp_subscript(BorrowedReference tp, BorrowedReference idx)
         {
             if (GetManagedObject(tp) is ClassBase cb)
@@ -272,7 +272,7 @@ namespace Python.Runtime
         /// Dealloc implementation. This is called when a Python type generated
         /// by this metatype is no longer referenced from the Python runtime.
         /// </summary>
-        [MonoPInvokeCallback (typeof (NewReferenceAction))]
+        [MonoPInvokeCallback (typeof (TpFreeAction))]
         public static void tp_dealloc(NewReference lastRef)
         {
             var weakrefs = Runtime.PyObject_GetWeakRefList(lastRef.Borrow());
@@ -338,13 +338,13 @@ namespace Python.Runtime
             return new NewReference(Runtime.PyFalse);
         }
 
-        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceNewReferenceFunc))]
+        [MonoPInvokeCallback (typeof (MpOperatorFunc))]
         public static NewReference __instancecheck__(BorrowedReference tp, BorrowedReference args)
         {
             return DoInstanceCheck(tp, args, false);
         }
 
-        [MonoPInvokeCallback (typeof (BorrowedReferenceBorrowedReferenceNewReferenceFunc))]
+        [MonoPInvokeCallback (typeof (MpOperatorFunc))]
         public static NewReference __subclasscheck__(BorrowedReference tp, BorrowedReference args)
         {
             return DoInstanceCheck(tp, args, true);

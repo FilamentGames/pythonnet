@@ -15,20 +15,24 @@ namespace Python.Runtime
     internal abstract class ManagedType
     {
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int NativeBorrowedReferenceIntPtrIntFunc(BorrowedReference a, IntPtr b);
+        internal delegate int UnmanagedVisitFunc(BorrowedReference a, IntPtr b);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void NativeStolenReferenceAction(StolenReference a);
+        internal delegate void UnmanagedFreeAction(StolenReference a);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int NativeBorrowedReferenceIntFunc(BorrowedReference a);
+        internal delegate int UnmanagedClearAction(BorrowedReference a);
+        internal delegate NewReference TpCallFunc(BorrowedReference tp, BorrowedReference args, BorrowedReference kw);
+        internal delegate int TpSetAttroFunc(BorrowedReference tp, BorrowedReference name, BorrowedReference value);
+        internal delegate NewReference TpAllocFunc(BorrowedReference mt, nint n);
+        internal delegate void TpFreeAction(NewReference tp);
+        internal delegate NewReference MpOperatorFunc(BorrowedReference tp, BorrowedReference idx);
+        internal delegate NewReference TpGetAttroFunc(BorrowedReference tp, BorrowedReference idx);
+        internal delegate NewReference TpReprFunc(NewReference a);
+        internal delegate int TpTraverseFunc(BorrowedReference a, IntPtr b, IntPtr c);
+        internal delegate int TpClearFunc(BorrowedReference a);
+        internal delegate NewReference TpDescrGetFunc(BorrowedReference ds, BorrowedReference ob, BorrowedReference tp);
+        internal delegate NewReference TpStrFunc(BorrowedReference ob);
+        internal delegate int TpDescrSetFunc(BorrowedReference ds, BorrowedReference ob, BorrowedReference val);
 
-        internal delegate NewReference BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference tp, BorrowedReference args, BorrowedReference kw);
-        internal delegate int BorrowedReferenceBorrowedReferenceBorrowedReferenceIntFunc(BorrowedReference tp, BorrowedReference name, BorrowedReference value);
-        internal delegate NewReference BorrowedReferenceNintNewReferenceFunc(BorrowedReference mt, nint n);
-        internal delegate void NewReferenceAction(NewReference tp);
-        internal delegate NewReference BorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference tp, BorrowedReference idx);
-        internal delegate NewReference BorrowedReferenceNewReferenceFunc(NewReference a);
-        internal delegate int BorrowedReferenceIntPtrIntPtrIntFunc(BorrowedReference a, IntPtr b, IntPtr c);
-        internal delegate int BorrowedReferenceIntFunc(BorrowedReference a);
 
         /// <summary>
         /// Given a Python object, return the associated managed object or null.
@@ -86,7 +90,7 @@ namespace Python.Runtime
             {
                 return 0;
             }
-            var visitFunc = Marshal.GetDelegateForFunctionPointer<NativeBorrowedReferenceIntPtrIntFunc>(visit);
+            var visitFunc = Marshal.GetDelegateForFunctionPointer<UnmanagedVisitFunc>(visit);
             return visitFunc(ob, arg);
         }
 
@@ -99,7 +103,7 @@ namespace Python.Runtime
 
             var freePtr = Util.ReadIntPtr(type, TypeOffset.tp_free);
             Debug.Assert(freePtr != IntPtr.Zero);
-            var free = Marshal.GetDelegateForFunctionPointer<NativeStolenReferenceAction>(freePtr);
+            var free = Marshal.GetDelegateForFunctionPointer<UnmanagedFreeAction>(freePtr);
             free(ob.AnalyzerWorkaround());
 
             Runtime.XDecref(StolenReference.DangerousFromPointer(type.DangerousGetAddress()));
@@ -121,7 +125,7 @@ namespace Python.Runtime
             {
                 return 0;
             }
-            var clearFunc = Marshal.GetDelegateForFunctionPointer<NativeBorrowedReferenceIntFunc>(clearPtr);
+            var clearFunc = Marshal.GetDelegateForFunctionPointer<UnmanagedClearAction>(clearPtr);
             return clearFunc(ob);
         }
 

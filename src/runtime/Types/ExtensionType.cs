@@ -65,7 +65,7 @@ namespace Python.Runtime
         /// <summary>
         /// Type __setattr__ implementation.
         /// </summary>
-        [MonoPInvokeCallback(typeof(BorrowedReferenceBorrowedReferenceBorrowedReferenceIntFunc))]
+        [MonoPInvokeCallback(typeof(TpSetAttroFunc))]
         public static int tp_setattro(BorrowedReference ob, BorrowedReference key, BorrowedReference val)
         {
             var message = "type does not support setting attributes";
@@ -77,7 +77,7 @@ namespace Python.Runtime
             return -1;
         }
 
-        [MonoPInvokeCallback(typeof(NewReferenceAction))]
+        [MonoPInvokeCallback(typeof(TpFreeAction))]
         public unsafe static void tp_dealloc(NewReference lastRef)
         {
             Runtime.PyObject_GC_UnTrack(lastRef.Borrow());
@@ -88,7 +88,7 @@ namespace Python.Runtime
             DecrefTypeAndFree(lastRef.Steal());
         }
 
-        [MonoPInvokeCallback(typeof(BorrowedReferenceIntFunc))]
+        [MonoPInvokeCallback(typeof(TpClearFunc))]
         public static int tp_clear(BorrowedReference ob)
         {
             var weakrefs = Runtime.PyObject_GetWeakRefList(ob);

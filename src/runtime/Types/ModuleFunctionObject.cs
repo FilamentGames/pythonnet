@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using AOT;
 
 namespace Python.Runtime
 {
@@ -22,6 +23,7 @@ namespace Python.Runtime
         /// <summary>
         /// __call__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         public static NewReference tp_call(BorrowedReference ob, BorrowedReference args, BorrowedReference kw)
         {
             var self = (ModuleFunctionObject)GetManagedObject(ob)!;
@@ -31,6 +33,7 @@ namespace Python.Runtime
         /// <summary>
         /// __repr__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpReprFunc))]
         public new static NewReference tp_repr(BorrowedReference ob)
         {
             var self = (ModuleFunctionObject)GetManagedObject(ob)!;

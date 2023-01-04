@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+using AOT;
+
 namespace Python.Runtime
 {
     using MaybeMethodInfo = MaybeMethodBase<MethodBase>;
@@ -142,6 +144,7 @@ namespace Python.Runtime
         /// <summary>
         /// Descriptor __getattribute__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpGetAttroFunc))]
         public static NewReference tp_getattro(BorrowedReference ob, BorrowedReference key)
         {
             var self = (MethodObject)GetManagedObject(ob)!;
@@ -163,6 +166,7 @@ namespace Python.Runtime
         /// Descriptor __get__ implementation. Accessing a CLR method returns
         /// a "bound" method similar to a Python bound method.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpDescrGetFunc))]
         public static NewReference tp_descr_get(BorrowedReference ds, BorrowedReference ob, BorrowedReference tp)
         {
             var self = (MethodObject)GetManagedObject(ds)!;
@@ -206,6 +210,7 @@ namespace Python.Runtime
         /// <summary>
         /// Descriptor __repr__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpReprFunc))]
         public static NewReference tp_repr(BorrowedReference ob)
         {
             var self = (MethodObject)GetManagedObject(ob)!;
