@@ -2,6 +2,8 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -37,6 +39,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __new__ for reflected interface types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         public static NewReference tp_new(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
         {
             var self = (InterfaceObject)GetManagedObject(tp)!;
@@ -96,6 +99,7 @@ namespace Python.Runtime
         /// Expose the wrapped implementation through attributes in both
         /// converted/encoded (__implementation__) and raw (__raw_implementation__) form.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpGetAttroFunc))]
         public static NewReference tp_getattro(BorrowedReference ob, BorrowedReference key)
         {
             var clrObj = (CLRObject)GetManagedObject(ob)!;

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Diagnostics;
 using System.Reflection;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -25,6 +27,7 @@ namespace Python.Runtime
         /// Descriptor __get__ implementation. A getattr on an event returns
         /// a "bound" event that keeps a reference to the object instance.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpDescrGetFunc))]
         public static NewReference tp_descr_get(BorrowedReference ds, BorrowedReference ob, BorrowedReference tp)
         {
             var self = GetManagedObject(ds) as EventObject;
@@ -55,6 +58,7 @@ namespace Python.Runtime
         /// 'ob.SomeEvent += method', Python will attempt to set the attribute
         /// SomeEvent on ob to the result of the '+=' operation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpDescrSetFunc))]
         public static int tp_descr_set(BorrowedReference ds, BorrowedReference ob, BorrowedReference val)
         {
             if (GetManagedObject(val) is EventBinding _)
@@ -70,6 +74,7 @@ namespace Python.Runtime
         /// <summary>
         /// Descriptor __repr__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpReprFunc))]
         public static NewReference tp_repr(BorrowedReference ob)
         {
             var self = (EventObject)GetManagedObject(ob)!;

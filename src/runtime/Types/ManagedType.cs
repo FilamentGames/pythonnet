@@ -24,15 +24,20 @@ namespace Python.Runtime
         internal delegate int TpSetAttroFunc(BorrowedReference tp, BorrowedReference name, BorrowedReference value);
         internal delegate NewReference TpAllocFunc(BorrowedReference mt, nint n);
         internal delegate void TpFreeAction(NewReference tp);
-        internal delegate NewReference MpOperatorFunc(BorrowedReference tp, BorrowedReference idx);
+        internal delegate NewReference MpSubscriptFunc(BorrowedReference tp, BorrowedReference idx);
         internal delegate NewReference TpGetAttroFunc(BorrowedReference tp, BorrowedReference idx);
         internal delegate NewReference TpReprFunc(NewReference a);
         internal delegate int TpTraverseFunc(BorrowedReference a, IntPtr b, IntPtr c);
         internal delegate int TpClearFunc(BorrowedReference a);
         internal delegate NewReference TpDescrGetFunc(BorrowedReference ds, BorrowedReference ob, BorrowedReference tp);
         internal delegate NewReference TpStrFunc(BorrowedReference ob);
+        internal delegate NewReference TpSubscriptFunc(BorrowedReference ob);
         internal delegate int TpDescrSetFunc(BorrowedReference ds, BorrowedReference ob, BorrowedReference val);
-
+        internal delegate int MpAssSubscriptFunc(BorrowedReference ob, BorrowedReference idx, BorrowedReference v);
+        internal delegate int SqContainsFunc(BorrowedReference ob, BorrowedReference v);
+        internal delegate NewReference TpRichCompareFunc(BorrowedReference ob, BorrowedReference other, int op);
+        internal delegate NewReference TpIterFunc(BorrowedReference ob);
+        internal delegate nint TpHashFunc(BorrowedReference ob);
 
         /// <summary>
         /// Given a Python object, return the associated managed object or null.

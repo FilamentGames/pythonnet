@@ -1,4 +1,5 @@
 using System;
+using AOT;
 
 namespace Python.Runtime;
 
@@ -12,12 +13,14 @@ internal class UnloadedClass : ClassBase
         this.name = name;
     }
 
+    [MonoPInvokeCallback(typeof(TpCallFunc))]
     public static NewReference tp_new(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
     {
         var self = (UnloadedClass)GetManagedObject(tp)!;
         return self.RaiseTypeError();
     }
 
+    [MonoPInvokeCallback(typeof(TpSubscriptFunc))]
     public override NewReference type_subscript(BorrowedReference idx) => RaiseTypeError();
 
     private NewReference RaiseTypeError()

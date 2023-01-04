@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
+using AOT;
+
 namespace Python.Runtime.Slots
 {
     internal static class MpLengthSlot
@@ -30,6 +32,7 @@ namespace Python.Runtime.Slots
         /// Implements __len__ for classes that implement ICollection
         /// (this includes any IList implementer or Array subclass)
         /// </summary>
+        [MonoPInvokeCallback(typeof(ManagedType.TpHashFunc))]
         internal static nint impl(BorrowedReference ob)
         {
             if (ManagedType.GetManagedObject(ob) is not CLRObject co)

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -22,6 +24,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements support for the Python iteration protocol.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpIterFunc))]
         public static NewReference tp_iternext(BorrowedReference ob)
         {
             var self = (Iterator)GetManagedObject(ob)!;
@@ -46,6 +49,7 @@ namespace Python.Runtime
             return Converter.ToPython(item, self.elemType);
         }
 
+        [MonoPInvokeCallback(typeof(TpIterFunc))]
         public static NewReference tp_iter(BorrowedReference ob) => new (ob);
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Reflection;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -21,6 +23,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implement explicit overload selection using subscript syntax ([]).
         /// </summary>
+        [MonoPInvokeCallback(typeof(MpSubscriptFunc))]
         public static NewReference mp_subscript(BorrowedReference tp, BorrowedReference idx)
         {
             var self = (OverloadMapper)GetManagedObject(tp)!;
@@ -49,6 +52,7 @@ namespace Python.Runtime
         /// <summary>
         /// OverloadMapper  __repr__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpReprFunc))]
         public static NewReference tp_repr(BorrowedReference op)
         {
             var self = (OverloadMapper)GetManagedObject(op)!;

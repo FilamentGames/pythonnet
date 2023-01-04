@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using AOT;
 
 namespace Python.Runtime
 {
@@ -22,6 +23,7 @@ namespace Python.Runtime
             return false;
         }
 
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         public static NewReference tp_new(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
         {
             if (kw != null)
@@ -142,6 +144,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __getitem__ for array types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(MpSubscriptFunc))]
         public static NewReference mp_subscript(BorrowedReference ob, BorrowedReference idx)
         {
             var obj = (CLRObject)GetManagedObject(ob)!;
@@ -245,6 +248,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __setitem__ for array types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(MpAssSubscriptFunc))]
         public static int mp_ass_subscript(BorrowedReference ob, BorrowedReference idx, BorrowedReference v)
         {
             var obj = (CLRObject)GetManagedObject(ob)!;
@@ -349,6 +353,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __contains__ for array types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(SqContainsFunc))]
         public static int sq_contains(BorrowedReference ob, BorrowedReference v)
         {
             var obj = (CLRObject)GetManagedObject(ob)!;

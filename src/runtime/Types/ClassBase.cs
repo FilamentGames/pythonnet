@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using AOT;
 
 using Python.Runtime.Slots;
 
@@ -91,6 +92,7 @@ namespace Python.Runtime
         /// <summary>
         /// Standard comparison implementation for instances of reflected types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpRichCompareFunc))]
         public static NewReference tp_richcompare(BorrowedReference ob, BorrowedReference other, int op)
         {
             CLRObject co1;
@@ -212,6 +214,7 @@ namespace Python.Runtime
         /// allows natural iteration over objects that either are IEnumerable
         /// or themselves support IEnumerator directly.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpIterFunc))]
         static NewReference tp_iter_impl(BorrowedReference ob)
         {
             if (GetManagedObject(ob) is not CLRObject co)
@@ -256,6 +259,7 @@ namespace Python.Runtime
         /// <summary>
         /// Standard __hash__ implementation for instances of reflected types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpHashFunc))]
         public static nint tp_hash(BorrowedReference ob)
         {
             if (GetManagedObject(ob) is CLRObject co)
@@ -273,6 +277,7 @@ namespace Python.Runtime
         /// <summary>
         /// Standard __str__ implementation for instances of reflected types.
         /// </summary>
+         [MonoPInvokeCallback(typeof(TpStrFunc))]
         public static NewReference tp_str(BorrowedReference ob)
         {
             var co = GetManagedObject(ob) as CLRObject;
@@ -295,6 +300,7 @@ namespace Python.Runtime
             }
         }
 
+        [MonoPInvokeCallback(typeof(TpReprFunc))]
         public static NewReference tp_repr(BorrowedReference ob)
         {
             if (GetManagedObject(ob) is not CLRObject co)
@@ -339,6 +345,7 @@ namespace Python.Runtime
         /// <summary>
         /// Standard dealloc implementation for instances of reflected types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpFreeAction))]
         public static void tp_dealloc(NewReference lastRef)
         {
             Runtime.PyObject_GC_UnTrack(lastRef.Borrow());
@@ -348,6 +355,7 @@ namespace Python.Runtime
             DecrefTypeAndFree(lastRef.Steal());
         }
 
+        [MonoPInvokeCallback(typeof(TpClearFunc))]
         public static int tp_clear(BorrowedReference ob)
         {
             var weakrefs = Runtime.PyObject_GetWeakRefList(ob);
@@ -419,6 +427,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __getitem__ for reflected classes and value types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(MpSubscriptFunc))]
         static NewReference mp_subscript_impl(BorrowedReference ob, BorrowedReference idx)
         {
             BorrowedReference tp = Runtime.PyObject_TYPE(ob);
@@ -449,6 +458,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __setitem__ for reflected classes and value types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(MpAssSubscriptFunc))]
         static int mp_ass_subscript_impl(BorrowedReference ob, BorrowedReference idx, BorrowedReference v)
         {
             BorrowedReference tp = Runtime.PyObject_TYPE(ob);
@@ -507,6 +517,7 @@ namespace Python.Runtime
             return 0;
         }
 
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         static NewReference tp_call_impl(BorrowedReference ob, BorrowedReference args, BorrowedReference kw)
         {
             BorrowedReference tp = Runtime.PyObject_TYPE(ob);

@@ -1,5 +1,7 @@
 using System;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -47,6 +49,7 @@ namespace Python.Runtime
         /// delegate instance belongs to an object generated to relay the call
         /// to the Python callable passed in.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         public static NewReference tp_new(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
         {
             var self = (DelegateObject)GetManagedObject(tp)!;
@@ -77,6 +80,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __call__ for reflected delegate types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         public static NewReference tp_call(BorrowedReference ob, BorrowedReference args, BorrowedReference kw)
         {
             // TODO: add fast type check!
@@ -94,6 +98,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __cmp__ for reflected delegate types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpRichCompareFunc))]
         public new static NewReference tp_richcompare(BorrowedReference ob, BorrowedReference other, int op)
         {
             if (op != Runtime.Py_EQ && op != Runtime.Py_NE)

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -51,6 +53,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __new__ for reflected classes and value types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         static NewReference tp_new_impl(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
         {
             // Sanity check: this ensures a graceful error if someone does
@@ -359,6 +362,7 @@ namespace Python.Runtime
         /// both to implement the Array[int] syntax for creating arrays and
         /// to support generic name overload resolution using [].
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpSubscriptFunc))]
         public override NewReference type_subscript(BorrowedReference idx)
         {
             if (!type.Valid)

@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -30,6 +32,7 @@ namespace Python.Runtime
         /// <summary>
         /// EventBinding += operator implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(MpSubscriptFunc))]
         public static NewReference nb_inplace_add(BorrowedReference ob, BorrowedReference arg)
         {
             var self = (EventBinding)GetManagedObject(ob)!;
@@ -52,6 +55,7 @@ namespace Python.Runtime
         /// <summary>
         /// EventBinding -= operator implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(MpSubscriptFunc))]
         public static NewReference nb_inplace_subtract(BorrowedReference ob, BorrowedReference arg)
         {
             var self = (EventBinding)GetManagedObject(ob)!;
@@ -70,6 +74,7 @@ namespace Python.Runtime
             return new NewReference(ob);
         }
 
+        [MonoPInvokeCallback(typeof(TpDescrSetFunc))]
         public static int tp_descr_set(BorrowedReference ds, BorrowedReference ob, BorrowedReference val)
             => EventObject.tp_descr_set(ds, ob, val);
 
@@ -77,6 +82,7 @@ namespace Python.Runtime
         /// <summary>
         /// EventBinding  __hash__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpHashFunc))]
         public static nint tp_hash(BorrowedReference ob)
         {
             var self = (EventBinding)GetManagedObject(ob)!;
@@ -99,6 +105,7 @@ namespace Python.Runtime
         /// <summary>
         /// EventBinding __repr__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpReprFunc))]
         public static NewReference tp_repr(BorrowedReference ob)
         {
             var self = (EventBinding)GetManagedObject(ob)!;

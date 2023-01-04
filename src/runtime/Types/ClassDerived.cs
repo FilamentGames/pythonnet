@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+using AOT;
+
 using Python.Runtime.Native;
 
 #pragma warning disable CS0618 // Type or member is obsolete. OK for internal use
@@ -62,6 +64,7 @@ namespace Python.Runtime
             // Python derived types rely on base tp_new and overridden __init__
         }
 
+        [MonoPInvokeCallback(typeof(TpFreeAction))]
         public new static void tp_dealloc(NewReference ob)
         {
             var self = (CLRObject?)GetManagedObject(ob.Borrow());
@@ -86,6 +89,7 @@ namespace Python.Runtime
         /// <summary>
         /// No-op clear. Real cleanup happens in <seealso cref="Finalize(IntPtr)"/>
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpClearFunc))]
         public new static int tp_clear(BorrowedReference ob) => 0;
 
         /// <summary>

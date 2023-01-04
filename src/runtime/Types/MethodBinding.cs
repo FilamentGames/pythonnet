@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
+using AOT;
+
 namespace Python.Runtime
 {
     using MaybeMethodInfo = MaybeMethodBase<MethodBase>;
@@ -33,6 +35,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implement binding of generic methods using the subscript syntax [].
         /// </summary>
+        [MonoPInvokeCallback(typeof(MpSubscriptFunc))]
         public static NewReference mp_subscript(BorrowedReference tp, BorrowedReference idx)
         {
             var self = (MethodBinding)GetManagedObject(tp)!;
@@ -123,6 +126,7 @@ namespace Python.Runtime
         /// <summary>
         /// MethodBinding __getattribute__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpGetAttroFunc))]
         public static NewReference tp_getattro(BorrowedReference ob, BorrowedReference key)
         {
             var self = (MethodBinding)GetManagedObject(ob)!;
@@ -161,6 +165,7 @@ namespace Python.Runtime
         /// <summary>
         /// MethodBinding  __call__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         public static NewReference tp_call(BorrowedReference ob, BorrowedReference args, BorrowedReference kw)
         {
             var self = (MethodBinding)GetManagedObject(ob)!;
@@ -252,6 +257,7 @@ namespace Python.Runtime
         /// <summary>
         /// MethodBinding  __hash__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpHashFunc))]
         public static nint tp_hash(BorrowedReference ob)
         {
             var self = (MethodBinding)GetManagedObject(ob)!;
@@ -273,6 +279,7 @@ namespace Python.Runtime
         /// <summary>
         /// MethodBinding  __repr__ implementation.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpReprFunc))]
         public static NewReference tp_repr(BorrowedReference ob)
         {
             var self = (MethodBinding)GetManagedObject(ob)!;

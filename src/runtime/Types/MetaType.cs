@@ -258,7 +258,7 @@ namespace Python.Runtime
         /// here we just delegate to the generic type def implementation. Its
         /// own mp_subscript
         /// </summary>
-        [MonoPInvokeCallback (typeof (MpOperatorFunc))]
+        [MonoPInvokeCallback (typeof (MpSubscriptFunc))]
         public static NewReference mp_subscript(BorrowedReference tp, BorrowedReference idx)
         {
             if (GetManagedObject(tp) is ClassBase cb)
@@ -338,13 +338,13 @@ namespace Python.Runtime
             return new NewReference(Runtime.PyFalse);
         }
 
-        [MonoPInvokeCallback (typeof (MpOperatorFunc))]
+        [MonoPInvokeCallback (typeof (MpSubscriptFunc))]
         public static NewReference __instancecheck__(BorrowedReference tp, BorrowedReference args)
         {
             return DoInstanceCheck(tp, args, false);
         }
 
-        [MonoPInvokeCallback (typeof (MpOperatorFunc))]
+        [MonoPInvokeCallback (typeof (MpSubscriptFunc))]
         public static NewReference __subclasscheck__(BorrowedReference tp, BorrowedReference args)
         {
             return DoInstanceCheck(tp, args, true);

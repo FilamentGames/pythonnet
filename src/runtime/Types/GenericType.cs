@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 
+using AOT;
+
 namespace Python.Runtime
 {
     /// <summary>
@@ -19,6 +21,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __new__ for reflected generic types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         public static NewReference tp_new(BorrowedReference tp, BorrowedReference args, BorrowedReference kw)
         {
             var self = (GenericType)GetManagedObject(tp)!;
@@ -77,6 +80,7 @@ namespace Python.Runtime
         /// <summary>
         /// Implements __call__ for reflected generic types.
         /// </summary>
+        [MonoPInvokeCallback(typeof(TpCallFunc))]
         public static NewReference tp_call(BorrowedReference ob, BorrowedReference args, BorrowedReference kw)
         {
             Exceptions.SetError(Exceptions.TypeError, "object is not callable");
