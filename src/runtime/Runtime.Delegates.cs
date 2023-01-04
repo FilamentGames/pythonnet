@@ -60,9 +60,9 @@ public unsafe partial class Runtime
             Py_GetCompiler = GetDelegateByName<IntPtrFunc>(nameof(Py_GetCompiler), GetUnmanagedDll(_PythonDll));
             Py_GetBuildInfo = GetDelegateByName<IntPtrFunc>(nameof(Py_GetBuildInfo), GetUnmanagedDll(_PythonDll));
             PyRun_SimpleStringFlags = GetDelegateByName<StrPtrPyCompilerFlagsintFunc>(nameof(PyRun_SimpleStringFlags), GetUnmanagedDll(_PythonDll));
-            PyRun_StringFlags = GetDelegateByName<delegate* unmanaged[Cdecl]<StrPtr, RunFlagType, BorrowedReference, BorrowedReference, in PyCompilerFlags, NewReference>>(nameof(PyRun_StringFlags), GetUnmanagedDll(_PythonDll));
+            PyRun_StringFlags = GetDelegateByName<StrPtrRunFlagTypeBorrowedReferenceBorrowedReferenceinPyCompilerFlagsNewReferenceFunc>(nameof(PyRun_StringFlags), GetUnmanagedDll(_PythonDll));
             PyEval_EvalCode = GetDelegateByName<BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc>(nameof(PyEval_EvalCode), GetUnmanagedDll(_PythonDll));
-            Py_CompileStringObject = GetDelegateByName<delegate* unmanaged[Cdecl]<StrPtr, BorrowedReference, int, in PyCompilerFlags, int, NewReference>>(nameof(Py_CompileStringObject), GetUnmanagedDll(_PythonDll));
+            Py_CompileStringObject = GetDelegateByName<StrPtrBorrowedReferenceintinPyCompilerFlagsintNewReferenceFunc>(nameof(Py_CompileStringObject), GetUnmanagedDll(_PythonDll));
             PyImport_ExecCodeModule = GetDelegateByName<StrPtrBorrowedReferenceNewReferenceFunc>(nameof(PyImport_ExecCodeModule), GetUnmanagedDll(_PythonDll));
             PyObject_HasAttrString = GetDelegateByName<BorrowedReferenceStrPtrintFunc>(nameof(PyObject_HasAttrString), GetUnmanagedDll(_PythonDll));
             PyObject_GetAttrString = GetDelegateByName<BorrowedReferenceStrPtrNewReferenceFunc>(nameof(PyObject_GetAttrString), GetUnmanagedDll(_PythonDll));
@@ -100,11 +100,11 @@ public unsafe partial class Runtime
                 // only in 3.9+
             }
             PyBuffer_IsContiguous = GetDelegateByName<Py_buffercharintFunc>(nameof(PyBuffer_IsContiguous), GetUnmanagedDll(_PythonDll));
-            PyBuffer_GetPointer = GetDelegateByName<delegate* unmanaged[Cdecl]<ref Py_buffer, nint[], IntPtr>>(nameof(PyBuffer_GetPointer), GetUnmanagedDll(_PythonDll));
-            PyBuffer_FromContiguous = GetDelegateByName<delegate* unmanaged[Cdecl]<ref Py_buffer, IntPtr, IntPtr, char, int>>(nameof(PyBuffer_FromContiguous), GetUnmanagedDll(_PythonDll));
-            PyBuffer_ToContiguous = GetDelegateByName<delegate* unmanaged[Cdecl]<IntPtr, ref Py_buffer, IntPtr, char, int>>(nameof(PyBuffer_ToContiguous), GetUnmanagedDll(_PythonDll));
-            PyBuffer_FillContiguousStrides = GetDelegateByName<delegate* unmanaged[Cdecl]<int, IntPtr, IntPtr, int, char, void>>(nameof(PyBuffer_FillContiguousStrides), GetUnmanagedDll(_PythonDll));
-            PyBuffer_FillInfo = GetDelegateByName<delegate* unmanaged[Cdecl]<ref Py_buffer, BorrowedReference, IntPtr, IntPtr, int, int, int>>(nameof(PyBuffer_FillInfo), GetUnmanagedDll(_PythonDll));
+            PyBuffer_GetPointer = GetDelegateByName<refPy_buffernintArrayIntPtrFunc>(nameof(PyBuffer_GetPointer), GetUnmanagedDll(_PythonDll));
+            PyBuffer_FromContiguous = GetDelegateByName<refPy_bufferIntPtrIntPtrcharintFunc>(nameof(PyBuffer_FromContiguous), GetUnmanagedDll(_PythonDll));
+            PyBuffer_ToContiguous = GetDelegateByName<IntPtrrefPy_bufferIntPtrcharintFunc>(nameof(PyBuffer_ToContiguous), GetUnmanagedDll(_PythonDll));
+            PyBuffer_FillContiguousStrides = GetDelegateByName<intIntPtrIntPtrintcharvoidFunc>(nameof(PyBuffer_FillContiguousStrides), GetUnmanagedDll(_PythonDll));
+            PyBuffer_FillInfo = GetDelegateByName<refPy_bufferBorrowedReferenceIntPtrIntPtrintintintFunc>(nameof(PyBuffer_FillInfo), GetUnmanagedDll(_PythonDll));
             PyNumber_Long = GetDelegateByName<BorrowedReferenceNewReferenceFunc>(nameof(PyNumber_Long), GetUnmanagedDll(_PythonDll));
             PyNumber_Float = GetDelegateByName<BorrowedReferenceNewReferenceFunc>(nameof(PyNumber_Float), GetUnmanagedDll(_PythonDll));
             PyNumber_Check = GetDelegateByName<BorrowedReferenceboolFunc>(nameof(PyNumber_Check), GetUnmanagedDll(_PythonDll));
@@ -148,7 +148,7 @@ public unsafe partial class Runtime
             PySequence_SetItem = GetDelegateByName<BorrowedReferencenintBorrowedReferenceintFunc>(nameof(PySequence_SetItem), GetUnmanagedDll(_PythonDll));
             PySequence_DelItem = GetDelegateByName<BorrowedReferencenintintFunc>(nameof(PySequence_DelItem), GetUnmanagedDll(_PythonDll));
             PySequence_GetSlice = GetDelegateByName<BorrowedReferencenintnintNewReferenceFunc>(nameof(PySequence_GetSlice), GetUnmanagedDll(_PythonDll));
-            PySequence_SetSlice = GetDelegateByName<delegate* unmanaged[Cdecl]<BorrowedReference, nint, nint, BorrowedReference, int>>(nameof(PySequence_SetSlice), GetUnmanagedDll(_PythonDll));
+            PySequence_SetSlice = GetDelegateByName<BorrowedReferencenintnintBorrowedReferenceIntFunc>(nameof(PySequence_SetSlice), GetUnmanagedDll(_PythonDll));
             PySequence_DelSlice = GetDelegateByName<BorrowedReferencenintnintintFunc>(nameof(PySequence_DelSlice), GetUnmanagedDll(_PythonDll));
             PySequence_Size = GetDelegateByName<BorrowedReferencenintFunc>(nameof(PySequence_Size), GetUnmanagedDll(_PythonDll));
             PySequence_Contains = GetDelegateByName<BorrowedReferenceBorrowedReferenceintFunc>(nameof(PySequence_Contains), GetUnmanagedDll(_PythonDll));
@@ -163,7 +163,7 @@ public unsafe partial class Runtime
             PyByteArray_FromStringAndSize = GetDelegateByName<IntPtrnintNewReferenceFunc>(nameof(PyByteArray_FromStringAndSize), GetUnmanagedDll(_PythonDll));
             PyBytes_Size = GetDelegateByName<BorrowedReferencenintFunc>(nameof(PyBytes_Size), GetUnmanagedDll(_PythonDll));
             PyUnicode_AsUTF8 = GetDelegateByName<BorrowedReferenceIntPtrFunc>(nameof(PyUnicode_AsUTF8), GetUnmanagedDll(_PythonDll));
-            PyUnicode_DecodeUTF16 = GetDelegateByName<delegate* unmanaged[Cdecl]<IntPtr, nint, IntPtr, IntPtr, NewReference>>(nameof(PyUnicode_DecodeUTF16), GetUnmanagedDll(_PythonDll));
+            PyUnicode_DecodeUTF16 = GetDelegateByName<IntPtrnintIntPtrIntPtrNewReferenceFunc>(nameof(PyUnicode_DecodeUTF16), GetUnmanagedDll(_PythonDll));
             PyUnicode_GetLength = GetDelegateByName<BorrowedReferencenintFunc>(nameof(PyUnicode_GetLength), GetUnmanagedDll(_PythonDll));
             PyUnicode_AsUnicode = GetDelegateByName<BorrowedReferenceIntPtrFunc>(nameof(PyUnicode_AsUnicode), GetUnmanagedDll(_PythonDll));
             PyUnicode_AsUTF16String = GetDelegateByName<BorrowedReferenceNewReferenceFunc>(nameof(PyUnicode_AsUTF16String), GetUnmanagedDll(_PythonDll));
@@ -196,7 +196,7 @@ public unsafe partial class Runtime
             PyList_Reverse = GetDelegateByName<BorrowedReferenceintFunc>(nameof(PyList_Reverse), GetUnmanagedDll(_PythonDll));
             PyList_Sort = GetDelegateByName<BorrowedReferenceintFunc>(nameof(PyList_Sort), GetUnmanagedDll(_PythonDll));
             PyList_GetSlice = GetDelegateByName<BorrowedReferencenintnintNewReferenceFunc>(nameof(PyList_GetSlice), GetUnmanagedDll(_PythonDll));
-            PyList_SetSlice = GetDelegateByName<delegate* unmanaged[Cdecl]<BorrowedReference, nint, nint, BorrowedReference, int>>(nameof(PyList_SetSlice), GetUnmanagedDll(_PythonDll));
+            PyList_SetSlice = GetDelegateByName<BorrowedReferencenintnintBorrowedReferenceIntFunc>(nameof(PyList_SetSlice), GetUnmanagedDll(_PythonDll));
             PyList_Size = GetDelegateByName<BorrowedReferencenintFunc>(nameof(PyList_Size), GetUnmanagedDll(_PythonDll));
             PyTuple_New = GetDelegateByName<nintNewReferenceFunc>(nameof(PyTuple_New), GetUnmanagedDll(_PythonDll));
             PyTuple_GetItem = GetDelegateByName<BorrowedReferencenintBorrowedReferenceFunc>(nameof(PyTuple_GetItem), GetUnmanagedDll(_PythonDll));
