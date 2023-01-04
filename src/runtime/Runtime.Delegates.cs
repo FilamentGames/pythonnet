@@ -383,6 +383,10 @@ public unsafe partial class Runtime
         internal delegate void intIntPtrintvoidFunc(int a, IntPtr b, int c);
         internal delegate void StolenReferenceStolenReferenceStolenReferencevoidFunc(StolenReference a, StolenReference b, StolenReference c);
         internal delegate NewReference IntPtrIntPtrIntPtrNewReferenceFunc(IntPtr a, IntPtr b, IntPtr c);
+        internal delegate void Py_buffervoidFunc(ref Py_buffer a);
+        internal delegate int StrPtrPyCompilerFlagsintFunc(StrPtr a, in PyCompilerFlags b);
+        internal delegate int Py_buffercharintFunc(ref Py_buffer a, char b);
+        internal delegate NewReference NativeTypeSpecBorrowedReferenceNewReferenceFunc(in NativeTypeSpec a, BorrowedReference b);
 
 
         internal static BorrowedReferenceAction Py_IncRef { get; }
