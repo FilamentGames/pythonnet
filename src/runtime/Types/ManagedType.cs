@@ -19,7 +19,7 @@ namespace Python.Runtime
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void UnmanagedFreeAction(StolenReference a);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int UnmanagedClearAction(BorrowedReference a);
+        internal delegate int UnmanagedClearFunc(BorrowedReference a);
         internal delegate NewReference TpCallFunc(BorrowedReference tp, BorrowedReference args, BorrowedReference kw);
         internal delegate int TpSetAttroFunc(BorrowedReference tp, BorrowedReference name, BorrowedReference value);
         internal delegate NewReference TpAllocFunc(BorrowedReference mt, nint n);
@@ -130,7 +130,7 @@ namespace Python.Runtime
             {
                 return 0;
             }
-            var clearFunc = Marshal.GetDelegateForFunctionPointer<UnmanagedClearAction>(clearPtr);
+            var clearFunc = Marshal.GetDelegateForFunctionPointer<UnmanagedClearFunc>(clearPtr);
             return clearFunc(ob);
         }
 
