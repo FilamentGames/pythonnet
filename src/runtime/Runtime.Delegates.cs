@@ -310,11 +310,42 @@ public unsafe partial class Runtime
             return Marshal.GetDelegateForFunctionPointer<T>(GetFunctionByName(functionName, libraryHandle));
         }
 
-        internal delegate void BorrowedReferenceAction(BorrowedReference obj);
+ internal delegate void BorrowedReferenceAction(BorrowedReference obj);
         internal delegate void StolenReferenceAction(ref StolenReference obj);
         internal delegate void IntAction(int obj);
         internal delegate int IntFunc();
         internal delegate IntPtr IntPtrFunc();
+        internal delegate NewReference BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc(BorrowedReference a, BorrowedReference b, BorrowedReference c);
+        internal delegate PyThreadState* PyThreadStateFunc();
+        internal delegate PyGILState PyGILStateFunc();
+        internal delegate BorrowedReference BorrowedReferenceFunc();
+        internal delegate NewReference NewReferenceFunc();
+        internal delegate void PyThreadStatevoidFunc(PyThreadState* a);
+        internal delegate PyThreadState* PyInterpreterStatePyThreadStateFunc(PyInterpreterState* a);
+        internal delegate void BorrowedReferencevoidFunc(BorrowedReference a);
+        internal delegate int BorrowedReferenceintFunc(BorrowedReference a);
+        internal delegate nint StrPtrnintFunc(StrPtr a);
+        internal delegate void IntPtrvoidFunc(IntPtr a);
+        internal delegate NewReference BorrowedReferenceNewReferenceFunc(BorrowedReference a);
+        internal delegate bool BorrowedReferenceboolFunc(BorrowedReference a);
+        internal delegate NewReference longNewReferenceFunc(long a);
+        internal delegate NewReference ulongNewReferenceFunc(ulong a);
+        internal delegate long BorrowedReferencelongFunc(BorrowedReference a);
+        internal delegate ulong BorrowedReferenceulongFunc(BorrowedReference a);
+        internal delegate NewReference IntPtrNewReferenceFunc(IntPtr a);
+        internal delegate IntPtr BorrowedReferenceIntPtrFunc(BorrowedReference a);
+        internal delegate NewReference doubleNewReferenceFunc(double a);
+        internal delegate double BorrowedReferencedoubleFunc(BorrowedReference a);
+        internal delegate nint BorrowedReferencenintFunc(BorrowedReference a);
+        internal delegate NewReference intNewReferenceFunc(int a);
+        internal delegate NewReference StrPtrNewReferenceFunc(StrPtr a);
+        internal delegate NewReference nintNewReferenceFunc(nint a);
+        internal delegate void PyGILStatevoidFunc(PyGILState a);
+        internal delegate BorrowedReference BorrowedReferenceBorrowedReferenceFunc(BorrowedReference a);
+        internal delegate BorrowedReference StrPtrBorrowedReferenceFunc(StrPtr a);
+        internal delegate void StolenReferencevoidFunc(StolenReference a);
+        internal delegate IntPtr nintIntPtrFunc(nint a);
+        internal delegate nuint BorrowedReferencenuintFunc(BorrowedReference a);
 
         internal static BorrowedReferenceAction Py_IncRef { get; }
         internal static StolenReferenceAction Py_DecRef { get; }
