@@ -223,6 +223,7 @@ public unsafe partial class Runtime
             PyType_Modified = GetDelegateByName<BorrowedReferencevoidFunc>(nameof(PyType_Modified), GetUnmanagedDll(_PythonDll));
             PyType_IsSubtype = GetDelegateByName<BorrowedReferenceBorrowedReferenceboolFunc>(nameof(PyType_IsSubtype), GetUnmanagedDll(_PythonDll));
             PyType_GenericNew = GetDelegateByName<BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc>(nameof(PyType_GenericNew), GetUnmanagedDll(_PythonDll));
+            PyType_GenericNewPtr = GetFunctionByName(nameof(PyType_GenericNew), GetUnmanagedDll(_PythonDll));
             PyType_GenericAlloc = GetDelegateByName<BorrowedReferencenintNewReferenceFunc>(nameof(PyType_GenericAlloc), GetUnmanagedDll(_PythonDll));
             PyType_Ready = GetDelegateByName<BorrowedReferenceintFunc>(nameof(PyType_Ready), GetUnmanagedDll(_PythonDll));
             _PyType_Lookup = GetDelegateByName<BorrowedReferenceBorrowedReferenceBorrowedReferenceFunc>(nameof(_PyType_Lookup), GetUnmanagedDll(_PythonDll));
@@ -344,7 +345,7 @@ public unsafe partial class Runtime
         internal delegate void PyGILStatevoidFunc(PyGILState a);
         internal delegate BorrowedReference BorrowedReferenceBorrowedReferenceFunc(BorrowedReference a);
         internal delegate BorrowedReference StrPtrBorrowedReferenceFunc(StrPtr a);
-        internal delegate void StolenReferencevoidFunc(StolenReference a);
+        internal delegate void StolenReferencevoidFunc(ref StolenReference a);
         internal delegate IntPtr nintIntPtrFunc(nint a);
         internal delegate nuint BorrowedReferencenuintFunc(BorrowedReference a);
         internal delegate int intIntPtrintFunc(int a, IntPtr b);
@@ -367,7 +368,7 @@ public unsafe partial class Runtime
         internal delegate void BorrowedReferenceBorrowedReferencevoidFunc(BorrowedReference a, BorrowedReference b);
         internal delegate IntPtr BorrowedReferenceIntPtrIntPtrFunc(BorrowedReference a, IntPtr b);
         internal delegate int BorrowedReferenceIntPtrintFunc(BorrowedReference a, IntPtr b);
-        internal delegate void BorrowedReferenceStolenReferencevoidFunc(BorrowedReference a, StolenReference b);
+        internal delegate void BorrowedReferenceStolenReferencevoidFunc(BorrowedReference a, ref StolenReference b);
         internal delegate int uintBorrowedReferenceintFunc(uint a, BorrowedReference b);
         internal delegate int ulongBorrowedReferenceintFunc(ulong a, BorrowedReference b);
         internal delegate NewReference BorrowedReferenceIntPtrNewReferenceFunc(BorrowedReference a, IntPtr b);
@@ -379,10 +380,10 @@ public unsafe partial class Runtime
         internal delegate int BorrowedReferencenintBorrowedReferenceintFunc(BorrowedReference a, nint b, BorrowedReference c);
         internal delegate NewReference BorrowedReferencenintnintNewReferenceFunc(BorrowedReference a, nint b, nint c);
         internal delegate int BorrowedReferencenintnintintFunc(BorrowedReference a, nint b, nint c);
-        internal delegate int BorrowedReferencenintStolenReferenceintFunc(BorrowedReference a, nint b, StolenReference c);
+        internal delegate int BorrowedReferencenintStolenReferenceintFunc(BorrowedReference a, nint b, ref StolenReference c);
         internal delegate int BorrowedReferenceStrPtrIntPtrintFunc(BorrowedReference a, StrPtr b, IntPtr c);
         internal delegate void intIntPtrintvoidFunc(int a, IntPtr b, int c);
-        internal delegate void StolenReferenceStolenReferenceStolenReferencevoidFunc(StolenReference a, StolenReference b, StolenReference c);
+        internal delegate void StolenReferenceStolenReferenceStolenReferencevoidFunc(ref StolenReference a, ref StolenReference b, ref StolenReference c);
         internal delegate NewReference IntPtrIntPtrIntPtrNewReferenceFunc(IntPtr a, IntPtr b, IntPtr c);
         internal delegate void Py_buffervoidFunc(ref Py_buffer a);
         internal delegate int StrPtrPyCompilerFlagsintFunc(StrPtr a, in PyCompilerFlags b);
@@ -592,6 +593,7 @@ public unsafe partial class Runtime
         internal static BorrowedReferencevoidFunc PyType_Modified { get; }
         internal static BorrowedReferenceBorrowedReferenceboolFunc PyType_IsSubtype { get; }
         internal static BorrowedReferenceBorrowedReferenceBorrowedReferenceNewReferenceFunc PyType_GenericNew { get; }
+        internal static IntPtr PyType_GenericNewPtr { get; }
         internal static BorrowedReferencenintNewReferenceFunc PyType_GenericAlloc { get; }
         internal static BorrowedReferenceintFunc PyType_Ready { get; }
         internal static BorrowedReferenceBorrowedReferenceBorrowedReferenceFunc _PyType_Lookup { get; }
