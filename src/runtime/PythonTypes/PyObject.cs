@@ -18,14 +18,14 @@ namespace Python.Runtime
     /// </summary>
     [Serializable]
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    public partial class PyObject : DynamicObject, IDisposable, ISerializable
+    public partial class PyObject : IDisposable, ISerializable
     {
 #if TRACE_ALLOC
         /// <summary>
         /// Trace stack for PyObject's construction
         /// </summary>
         public StackTrace Traceback { get; } = new StackTrace(1);
-#endif  
+#endif
 
         protected IntPtr rawPtr = IntPtr.Zero;
         internal readonly int run = Runtime.GetRun();
@@ -235,7 +235,7 @@ namespace Python.Runtime
         {
             GC.SuppressFinalize(this);
             Dispose(true);
-            
+
         }
 
         internal StolenReference Steal()
@@ -1136,26 +1136,6 @@ namespace Python.Runtime
             }
         }
 
-
-        public override bool TryGetMember(GetMemberBinder binder, out object? result)
-        {
-            using var _ = Py.GIL();
-            result = CheckNone(this.GetAttr(binder.Name));
-            return true;
-        }
-
-        public override bool TrySetMember(SetMemberBinder binder, object? value)
-        {
-            using var _ = Py.GIL();
-            using var newVal = Converter.ToPythonDetectType(value);
-            int r = Runtime.PyObject_SetAttrString(obj, binder.Name, newVal.Borrow());
-            if (r < 0)
-            {
-                throw PythonException.ThrowLastAsClrException();
-            }
-            return true;
-        }
-
         private void GetArgs(object?[] inargs, CallInfo callInfo, out PyTuple args, out PyDict? kwargs)
         {
             if (callInfo == null || callInfo.ArgumentNames.Count == 0)
@@ -1238,82 +1218,6 @@ namespace Python.Runtime
             }
         }
 
-        public override bool TryInvokeMember(InvokeMemberBinder binder, object?[] args, out object? result)
-        {
-            using var _ = Py.GIL();
-            if (this.HasAttr(binder.Name) && this.GetAttr(binder.Name).IsCallable())
-            {
-                PyTuple? pyargs = null;
-                PyDict? kwargs = null;
-                try
-                {
-                    GetArgs(args, binder.CallInfo, out pyargs, out kwargs);
-                    result = CheckNone(InvokeMethod(binder.Name, pyargs, kwargs));
-                }
-                finally
-                {
-                    pyargs?.Dispose();
-                    kwargs?.Dispose();
-                }
-                return true;
-            }
-            else
-            {
-                return base.TryInvokeMember(binder, args, out result);
-            }
-        }
-
-        public override bool TryInvoke(InvokeBinder binder, object?[] args, out object? result)
-        {
-            using var _ = Py.GIL();
-            if (this.IsCallable())
-            {
-                PyTuple? pyargs = null;
-                PyDict? kwargs = null;
-                try
-                {
-                    GetArgs(args, binder.CallInfo, out pyargs, out kwargs);
-                    result = CheckNone(Invoke(pyargs, kwargs));
-                }
-                finally
-                {
-                    pyargs?.Dispose();
-                    kwargs?.Dispose();
-                }
-                return true;
-            }
-            else
-            {
-                return base.TryInvoke(binder, args, out result);
-            }
-        }
-
-        public override bool TryConvert(ConvertBinder binder, out object? result)
-        {
-            using var _ = Py.GIL();
-            // always try implicit conversion first
-            if (Converter.ToManaged(this.obj, binder.Type, out result, false))
-            {
-                return true;
-            }
-
-            if (binder.Explicit)
-            {
-                Runtime.PyErr_Fetch(out var errType, out var errValue, out var tb);
-                bool converted = Converter.ToManagedExplicit(Reference, binder.Type, out result);
-                Runtime.PyErr_Restore(errType.StealNullable(), errValue.StealNullable(), tb.StealNullable());
-                return converted;
-            }
-
-            if (binder.Type == typeof(System.Collections.IEnumerable) && this.IsIterable())
-            {
-                result = new PyIterable(this.Reference);
-                return true;
-            }
-
-            return false;
-        }
-
         private bool TryCompare(PyObject arg, int op, out object @out)
         {
             int result = Runtime.PyObject_RichCompareBool(this.obj, arg.obj, op);
@@ -1323,101 +1227,6 @@ namespace Python.Runtime
                 Exceptions.Clear();
                 return false;
             }
-            return true;
-        }
-        
-        public override bool TryBinaryOperation(BinaryOperationBinder binder, object arg, out object? result)
-        {
-            using var _ = Py.GIL();
-            NewReference res;
-            if (arg is not PyObject)
-            {
-                arg = arg.ToPython();
-            }
-
-            switch (binder.Operation)
-            {
-                case ExpressionType.Add:
-                    res = Runtime.PyNumber_Add(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.AddAssign:
-                    res = Runtime.PyNumber_InPlaceAdd(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.Subtract:
-                    res = Runtime.PyNumber_Subtract(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.SubtractAssign:
-                    res = Runtime.PyNumber_InPlaceSubtract(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.Multiply:
-                    res = Runtime.PyNumber_Multiply(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.MultiplyAssign:
-                    res = Runtime.PyNumber_InPlaceMultiply(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.Divide:
-                    res = Runtime.PyNumber_TrueDivide(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.DivideAssign:
-                    res = Runtime.PyNumber_InPlaceTrueDivide(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.And:
-                    res = Runtime.PyNumber_And(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.AndAssign:
-                    res = Runtime.PyNumber_InPlaceAnd(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.ExclusiveOr:
-                    res = Runtime.PyNumber_Xor(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.ExclusiveOrAssign:
-                    res = Runtime.PyNumber_InPlaceXor(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.GreaterThan:
-                    return this.TryCompare((PyObject)arg, Runtime.Py_GT, out result);
-                case ExpressionType.GreaterThanOrEqual:
-                    return this.TryCompare((PyObject)arg, Runtime.Py_GE, out result);
-                case ExpressionType.LeftShift:
-                    res = Runtime.PyNumber_Lshift(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.LeftShiftAssign:
-                    res = Runtime.PyNumber_InPlaceLshift(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.LessThan:
-                    return this.TryCompare((PyObject)arg, Runtime.Py_LT, out result);
-                case ExpressionType.LessThanOrEqual:
-                    return this.TryCompare((PyObject)arg, Runtime.Py_LE, out result);
-                case ExpressionType.Modulo:
-                    res = Runtime.PyNumber_Remainder(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.ModuloAssign:
-                    res = Runtime.PyNumber_InPlaceRemainder(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.NotEqual:
-                    return this.TryCompare((PyObject)arg, Runtime.Py_NE, out result);
-                case ExpressionType.Equal:
-                    return this.TryCompare((PyObject)arg, Runtime.Py_EQ, out result);
-                case ExpressionType.Or:
-                    res = Runtime.PyNumber_Or(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.OrAssign:
-                    res = Runtime.PyNumber_InPlaceOr(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.Power:
-                    res = Runtime.PyNumber_Power(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.RightShift:
-                    res = Runtime.PyNumber_Rshift(this.obj, ((PyObject)arg).obj);
-                    break;
-                case ExpressionType.RightShiftAssign:
-                    res = Runtime.PyNumber_InPlaceRshift(this.obj, ((PyObject)arg).obj);
-                    break;
-                default:
-                    result = null;
-                    return false;
-            }
-            Exceptions.ErrorCheck(res.BorrowNullable());
-            result = CheckNone(new PyObject(res.Borrow()));
             return true;
         }
 
@@ -1468,60 +1277,6 @@ namespace Python.Runtime
             }
 
             return pyObj;
-        }
-
-        public override bool TryUnaryOperation(UnaryOperationBinder binder, out object? result)
-        {
-            using var _ = Py.GIL();
-            int r;
-            NewReference res;
-            switch (binder.Operation)
-            {
-                case ExpressionType.Negate:
-                    res = Runtime.PyNumber_Negative(this.obj);
-                    break;
-                case ExpressionType.UnaryPlus:
-                    res = Runtime.PyNumber_Positive(this.obj);
-                    break;
-                case ExpressionType.OnesComplement:
-                    res = Runtime.PyNumber_Invert(this.obj);
-                    break;
-                case ExpressionType.Not:
-                    r = Runtime.PyObject_Not(this.obj);
-                    result = r == 1;
-                    if (r == -1) Exceptions.Clear();
-                    return r != -1;
-                case ExpressionType.IsFalse:
-                    r = Runtime.PyObject_IsTrue(this.obj);
-                    result = r == 0;
-                    if (r == -1) Exceptions.Clear();
-                    return r != -1;
-                case ExpressionType.IsTrue:
-                    r = Runtime.PyObject_IsTrue(this.obj);
-                    result = r == 1;
-                    if (r == -1) Exceptions.Clear();
-                    return r != -1;
-                case ExpressionType.Decrement:
-                case ExpressionType.Increment:
-                default:
-                    result = null;
-                    return false;
-            }
-            result = CheckNone(new PyObject(res.StealOrThrow()));
-            return true;
-        }
-
-        /// <summary>
-        /// Returns the enumeration of all dynamic member names.
-        /// </summary>
-        /// <remarks>
-        /// This method exists for debugging purposes only.
-        /// </remarks>
-        /// <returns>A sequence that contains dynamic member names.</returns>
-        public override IEnumerable<string> GetDynamicMemberNames()
-        {
-            using var _ = Py.GIL();
-            return Dir().Select(pyObj => pyObj.ToString()!).ToArray();
         }
 
         void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)

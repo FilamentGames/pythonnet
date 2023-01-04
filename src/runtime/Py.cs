@@ -178,7 +178,4 @@ public static class Py
 
         if (ex != null && !exitResult.IsTrue()) throw ex;
     }
-
-    public static void With(PyObject obj, Action<dynamic> Body)
-        => With(obj, (PyObject context) => Body(context));
 }

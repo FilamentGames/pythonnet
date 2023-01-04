@@ -446,18 +446,6 @@ namespace Python.Runtime
             return true;
         }
 
-        public override bool TryGetMember(GetMemberBinder binder, out object? result)
-        {
-            result = CheckNone(this.Get(binder.Name));
-            return true;
-        }
-
-        public override bool TrySetMember(SetMemberBinder binder, object? value)
-        {
-            this.Set(binder.Name, value);
-            return true;
-        }
-
         private void Check()
         {
             if (this.rawPtr == IntPtr.Zero)
