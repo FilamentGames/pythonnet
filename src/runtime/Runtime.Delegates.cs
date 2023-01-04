@@ -246,7 +246,7 @@ public unsafe partial class Runtime
             PyErr_SetObject = GetDelegateByName<BorrowedReferenceBorrowedReferencevoidFunc>(nameof(PyErr_SetObject), GetUnmanagedDll(_PythonDll));
             PyErr_ExceptionMatches = GetDelegateByName<BorrowedReferenceintFunc>(nameof(PyErr_ExceptionMatches), GetUnmanagedDll(_PythonDll));
             PyErr_GivenExceptionMatches = GetDelegateByName<BorrowedReferenceBorrowedReferenceintFunc>(nameof(PyErr_GivenExceptionMatches), GetUnmanagedDll(_PythonDll));
-            PyErr_NormalizeException = GetDelegateByName<NewReferenceNewReferenceNewReferencevoidFunc>(nameof(PyErr_NormalizeException), GetUnmanagedDll(_PythonDll));
+            PyErr_NormalizeException = GetDelegateByName<NewReferenceNewReferenceNewReferencevoidRefFunc>(nameof(PyErr_NormalizeException), GetUnmanagedDll(_PythonDll));
             PyErr_Occurred = GetDelegateByName<BorrowedReferenceFunc>(nameof(PyErr_Occurred), GetUnmanagedDll(_PythonDll));
             PyErr_Fetch = GetDelegateByName<NewReferenceNewReferenceNewReferencevoidFunc>(nameof(PyErr_Fetch), GetUnmanagedDll(_PythonDll));
             PyErr_Restore = GetDelegateByName<StolenReferenceStolenReferenceStolenReferencevoidFunc>(nameof(PyErr_Restore), GetUnmanagedDll(_PythonDll));
@@ -381,7 +381,7 @@ public unsafe partial class Runtime
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate BorrowedReference StrPtrBorrowedReferenceFunc(StrPtr a);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void StolenReferencevoidFunc(ref StolenReference a);
+        internal delegate void StolenReferencevoidFunc(StolenReference a);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate IntPtr nintIntPtrFunc(nint a);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -427,7 +427,7 @@ public unsafe partial class Runtime
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate int BorrowedReferenceIntPtrintFunc(BorrowedReference a, IntPtr b);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void BorrowedReferenceStolenReferencevoidFunc(BorrowedReference a, ref StolenReference b);
+        internal delegate void BorrowedReferenceStolenReferencevoidFunc(BorrowedReference a, StolenReference b);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate int uintBorrowedReferenceintFunc(uint a, BorrowedReference b);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -451,13 +451,13 @@ public unsafe partial class Runtime
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate int BorrowedReferencenintnintintFunc(BorrowedReference a, nint b, nint c);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int BorrowedReferencenintStolenReferenceintFunc(BorrowedReference a, nint b, ref StolenReference c);
+        internal delegate int BorrowedReferencenintStolenReferenceintFunc(BorrowedReference a, nint b, StolenReference c);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate int BorrowedReferenceStrPtrIntPtrintFunc(BorrowedReference a, StrPtr b, IntPtr c);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void intIntPtrintvoidFunc(int a, IntPtr b, int c);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void StolenReferenceStolenReferenceStolenReferencevoidFunc(ref StolenReference a, ref StolenReference b, ref StolenReference c);
+        internal delegate void StolenReferenceStolenReferenceStolenReferencevoidFunc(StolenReference a, StolenReference b, StolenReference c);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate NewReference IntPtrIntPtrIntPtrNewReferenceFunc(IntPtr a, IntPtr b, IntPtr c);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -472,6 +472,8 @@ public unsafe partial class Runtime
         internal delegate int BorrowedReferencePy_bufferintintFunc(BorrowedReference a, out Py_buffer b, int c);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate void NewReferenceNewReferenceNewReferencevoidFunc(out NewReference a, out NewReference b, out NewReference c);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        internal delegate void NewReferenceNewReferenceNewReferencevoidRefFunc(ref NewReference a, ref NewReference b, ref NewReference c);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         internal delegate NewReference StrPtrRunFlagTypeBorrowedReferenceBorrowedReferenceinPyCompilerFlagsNewReferenceFunc(StrPtr a, RunFlagType b, BorrowedReference c, BorrowedReference d, in PyCompilerFlags e);
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -700,7 +702,7 @@ public unsafe partial class Runtime
         internal static BorrowedReferenceBorrowedReferencevoidFunc PyErr_SetObject { get; }
         internal static BorrowedReferenceintFunc PyErr_ExceptionMatches { get; }
         internal static BorrowedReferenceBorrowedReferenceintFunc PyErr_GivenExceptionMatches { get; }
-        internal static NewReferenceNewReferenceNewReferencevoidFunc PyErr_NormalizeException { get; }
+        internal static NewReferenceNewReferenceNewReferencevoidRefFunc PyErr_NormalizeException { get; }
         internal static BorrowedReferenceFunc PyErr_Occurred { get; }
         internal static NewReferenceNewReferenceNewReferencevoidFunc PyErr_Fetch { get; }
         internal static StolenReferenceStolenReferenceStolenReferencevoidFunc PyErr_Restore { get; }
