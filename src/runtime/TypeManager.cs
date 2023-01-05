@@ -139,7 +139,7 @@ namespace Python.Runtime
             // Set tp_basicsize to the size of our managed instance objects.
             Util.WriteIntPtr(type, TypeOffset.tp_basicsize, (IntPtr)ob_size);
             Util.WriteInt32(type, ManagedType.Offsets.tp_clr_inst_offset, tp_clr_inst_offset);
-            Util.WriteIntPtr(type, TypeOffset.tp_new, Runtime.Delegates.PyType_GenericNewPtr);
+            Util.WriteIntPtr(type, TypeOffset.tp_new, (IntPtr)Runtime.Delegates.PyType_GenericNew);
 
             SlotsHolder slotsHolder = CreateSlotsHolder(type);
             InitializeSlots(type, impl, slotsHolder);
