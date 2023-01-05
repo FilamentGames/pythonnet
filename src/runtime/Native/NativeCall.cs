@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.InteropServices;
 
 namespace Python.Runtime
 {
@@ -12,31 +11,22 @@ namespace Python.Runtime
     /// </summary>
     internal unsafe class NativeCall
     {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate void DeallocFunc(StolenReference obj);
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate NewReference Call3Func(BorrowedReference a1, BorrowedReference a2, BorrowedReference a3);
-
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        internal delegate int IntCall3Func(BorrowedReference a1, BorrowedReference a2, BorrowedReference a3);
-
         public static void CallDealloc(IntPtr fp, StolenReference a1)
         {
-            var d = Marshal.GetDelegateForFunctionPointer<DeallocFunc>(fp);
-            d(a1.AnalyzerWorkaround());
+            var d = (delegate* unmanaged[Cdecl]<StolenReference, void>)fp;
+            d(a1);
         }
 
         public static NewReference Call_3(IntPtr fp, BorrowedReference a1, BorrowedReference a2, BorrowedReference a3)
         {
-            var d = Marshal.GetDelegateForFunctionPointer<Call3Func>(fp);
+            var d = (delegate* unmanaged[Cdecl]<BorrowedReference, BorrowedReference, BorrowedReference, NewReference>)fp;
             return d(a1, a2, a3);
         }
 
 
         public static int Int_Call_3(IntPtr fp, BorrowedReference a1, BorrowedReference a2, BorrowedReference a3)
         {
-            var d = Marshal.GetDelegateForFunctionPointer<IntCall3Func>(fp);
+            var d = (delegate* unmanaged[Cdecl]<BorrowedReference, BorrowedReference, BorrowedReference, int>)fp;
             return d(a1, a2, a3);
         }
     }
