@@ -95,7 +95,7 @@ namespace Python.Runtime
             {
                 return 0;
             }
-            var visitFunc = Marshal.GetDelegateForFunctionPointer<UnmanagedVisitFunc>(visit);
+            var visitFunc = (delegate* unmanaged[Cdecl]<BorrowedReference, IntPtr, int>)(visit);
             return visitFunc(ob, arg);
         }
 
@@ -108,8 +108,8 @@ namespace Python.Runtime
 
             var freePtr = Util.ReadIntPtr(type, TypeOffset.tp_free);
             Debug.Assert(freePtr != IntPtr.Zero);
-            var free = Marshal.GetDelegateForFunctionPointer<UnmanagedFreeAction>(freePtr);
-            free(ob.AnalyzerWorkaround());
+            var free = (delegate* unmanaged[Cdecl]<StolenReference, void>)freePtr;
+            free(ob);
 
             Runtime.XDecref(StolenReference.DangerousFromPointer(type.DangerousGetAddress()));
         }
@@ -130,7 +130,7 @@ namespace Python.Runtime
             {
                 return 0;
             }
-            var clearFunc = Marshal.GetDelegateForFunctionPointer<UnmanagedClearFunc>(clearPtr);
+            var clearFunc = (delegate* unmanaged[Cdecl]<BorrowedReference, int>)clearPtr;
             return clearFunc(ob);
         }
 
