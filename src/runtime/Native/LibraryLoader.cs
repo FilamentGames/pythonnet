@@ -27,13 +27,13 @@ namespace Python.Runtime.Platform
                 {
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                         _instance = new WindowsLoader();
-                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.OSDescription.Contains("Unix"))
                         _instance = new PosixLoader(LinuxLibDL.GetInstance());
                     else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
                         _instance = new PosixLoader(new MacLibDL());
                     else
                         throw new PlatformNotSupportedException(
-                            "This operating system is not supported"
+                            String.Format("This operating system is not supported: {0}", RuntimeInformation.OSDescription)
                         );
                 }
 
