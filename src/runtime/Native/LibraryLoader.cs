@@ -110,7 +110,7 @@ namespace Python.Runtime.Platform
         public IntPtr Load(string? dllToLoad)
         {
             if (dllToLoad is null) return IntPtr.Zero;
-            var res = WindowsLoader.LoadLibrary(dllToLoad);
+            var res = WindowsLoader.LoadLibraryW(dllToLoad);
             if (res == IntPtr.Zero)
                 throw new DllNotFoundException($"Could not load {dllToLoad}.", new Win32Exception());
             return res;
@@ -153,8 +153,8 @@ namespace Python.Runtime.Platform
             return result.Take((int)(needsBytes / IntPtr.Size)).ToArray();
         }
 
-        [DllImport(NativeDll, SetLastError = true)]
-        static extern IntPtr LoadLibrary(string dllToLoad);
+        [DllImport(NativeDll, SetLastError = true, CharSet = CharSet.Unicode)]
+        static extern IntPtr LoadLibraryW(string dllToLoad);
 
         [DllImport(NativeDll, SetLastError = true)]
         static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
